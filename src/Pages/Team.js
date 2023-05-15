@@ -3,7 +3,7 @@ import React from 'react'
 import { useParams } from 'react-router'
 import SkeletonLoad from "../Components/SkeletonLoad";
 import Box from "@mui/material/Box";
-
+import RosterStatsTable from '../Components/RosterStatsTable';
 export default function Team({teams, standings}) {
   
   const [data, setData] = React.useState([])
@@ -45,6 +45,8 @@ export default function Team({teams, standings}) {
     )
   }
   return (
-    <div>Team {key}</div>
+    <>
+        <RosterStatsTable roster={data.roster} stats={data.stats}/>
+    </>
   )
 }
