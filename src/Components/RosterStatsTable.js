@@ -19,7 +19,6 @@ export default function RosterStatsTable({roster, stats}) {
         <TableHead>
           <TableRow>
             <TableCell>Roster (Hitting)</TableCell>
-
           </TableRow>
         </TableHead>
         <TableBody>
