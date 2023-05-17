@@ -1,7 +1,8 @@
 import * as React from 'react';
 import StandingsTable from './StandingsTable'
 import Grid from '@mui/material/Grid'
-export default function LeagueStandings({standings}) {
+export default function LeagueStandings({standings, teamLogos}) {
+    
   const map = {
     AL: [
         {
@@ -28,7 +29,7 @@ export default function LeagueStandings({standings}) {
             Object.values(map.AL[0]).map(division => {
                 return(
                     <Grid item>
-                        <StandingsTable division={division} />
+                        <StandingsTable division={division} teamLogos={teamLogos}/>
                     </Grid>
                 )
             })
@@ -40,7 +41,7 @@ export default function LeagueStandings({standings}) {
             Object.values(map.NL[0]).map(division => {
                 return(
                     <Grid item>
-                        <StandingsTable division={division} />
+                        <StandingsTable division={division} teamLogos={teamLogos}/>
                     </Grid>
                 )
             })

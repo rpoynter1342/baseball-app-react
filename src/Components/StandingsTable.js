@@ -6,9 +6,11 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import Avatar from '@mui/material/Avatar';
+import Grid from '@mui/material/Grid'
 
-export default function StandingsTable({division}) {
-    console.log(division)
+export default function StandingsTable({division, teamLogos}) {
+    // console.log(teamLogos)
     return (
 
       <TableContainer sx={{ maxWidth: 450, minWidth: 450 }} component={Paper}>
@@ -29,7 +31,10 @@ export default function StandingsTable({division}) {
                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
               >
                 <TableCell component="th" scope="row">
-                  {row.Key + ' ' + row.Name}
+                  <Grid container>
+                    <Avatar src={teamLogos.teams[row.Key]} sx={{objectFit: 'contain', width: 14, height: 14 }}/> 
+                    {row.Key + ' ' + row.Name}
+                  </Grid>
                 </TableCell>
                 <TableCell align="right">{row.DivisionRank}</TableCell>
                 <TableCell align="right">{row.Wins}</TableCell>
