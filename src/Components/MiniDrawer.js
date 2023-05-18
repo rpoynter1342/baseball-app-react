@@ -17,6 +17,7 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
+import Tooltip from '@mui/material/Tooltip';
 
 const drawerWidth = 240;
 
@@ -140,6 +141,7 @@ export default function MiniDrawer(props) {
                 sx={{ display: "block" }}
               >
                 <Link to={page.path} style={{ textDecoration: 'none', color: 'grey' }}>
+                <Tooltip title={page.name} placement="right">
                   <ListItemButton
                     key={page.name}
                     sx={{
@@ -160,6 +162,7 @@ export default function MiniDrawer(props) {
                     </ListItemIcon>
                     <ListItemText primary={page.name} sx={{ opacity: open ? 1 : 0 }} />
                   </ListItemButton>
+                  </Tooltip>
                 </Link>
               </ListItem>
             );

@@ -8,13 +8,14 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Avatar from '@mui/material/Avatar';
 import Grid from '@mui/material/Grid'
+import { Link, Routes, Route } from "react-router-dom";
 
 export default function StandingsTable({division, teamLogos}) {
     // console.log(teamLogos)
     return (
 
       <TableContainer sx={{ maxWidth: 450, minWidth: 450 }} component={Paper}>
-        <Table  size="small" aria-label="a dense table">
+        <Table  size="small">
           <TableHead>
             <TableRow>
                 <TableCell>{division[0].League + ' ' + division[0].Division}</TableCell>
@@ -33,7 +34,7 @@ export default function StandingsTable({division, teamLogos}) {
                 <TableCell component="th" scope="row">
                   <Grid container>
                     <Avatar src={teamLogos.teams[row.Key]} sx={{objectFit: 'contain', width: 14, height: 14 }}/> 
-                    {row.Key + ' ' + row.Name}
+                    <Link to={`/team/${row.Key}`}>{row.Key + ' ' + row.Name}</Link>
                   </Grid>
                 </TableCell>
                 <TableCell align="right">{row.DivisionRank}</TableCell>

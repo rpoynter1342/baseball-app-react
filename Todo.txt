@@ -1,5 +1,5 @@
-* add hover to side nav when closed
 * update current games in real time
 * bold table headers
-* add small avatar logos to standings tables
+* fix logo centering
+* add google log in
 * dark mode

@@ -15,9 +15,9 @@ import MiniDrawer from "./Components/MiniDrawer.js";
 import Team from './Pages/Team'
 import SkeletonLoad from "./Components/SkeletonLoad";
 import Box from "@mui/material/Box";
-
-
-
+import Players from './Pages/Players'
+import SportsBaseballIcon from '@mui/icons-material/SportsBaseball';
+import Player from './Pages/Player'
 function App() {
   const [data,setData] = React.useState([])
   
@@ -51,14 +51,16 @@ function App() {
   }
   const pages = [
     {name: 'Home', path: '/', element: <Home props={data}/>, icon: <HomeIcon />}, 
-    {name: 'Top Players', path: '/top', element: <TopPlayers />, icon: <StarIcon />}, 
+    {name: 'Top Players', path: '/top', element: <TopPlayers />, icon: <StarIcon />},
+    {name: 'All Players', path: '/players', element: <Players />, icon: <SportsBaseballIcon />}, 
     {name: 'Teams', path: '/teams', element: <Teams />, icon: <GroupsIcon />}, 
     {name: 'Current Games', path: '/curGames', element: <CurrentGames />, icon: <NotificationsActiveIcon />}, 
     {name: 'Fantasy', path: '/fantasy', element: <Fantasy />, icon: <AddIcon />}
   ];
   
   const hiddenPages = [
-    {name: 'Team', path: '/team/:key', element: <Team teams={data.teams} standings={data.standings}/>}, 
+    {name: 'Team', path: '/team/:key', element: <Team teams={data.teams} standings={data.standings}/>},
+    {name: 'Player', path: '/player/:key', element: <Player />}, 
   ]
   return (
     <MiniDrawer pages={pages}>

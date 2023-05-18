@@ -57,6 +57,24 @@ def roster():
     print(len(data["roster"]))
     return(data)
 
+@app.route('/player')
+def player_data():
+    player_id = request.args.get('id')
+    stats_array = []
+    res = requests.get('https://api.sportsdata.io/v3/mlb/scores/json/Player/'+player_id+'?key=b0608b16e8984da68d84bf40d21e26d0')
+    response = json.loads(res.text)
+    is_pitcher = response['PositionCategory'] != 'P'
+    group_str = ""
+    if is_pitcher:
+        group_str = "[pithcing]"
+    else:
+        group_str = "[hitting, fielding]"
+    player_data = statsapi.lookup_player(response["LastName"] + ', ' + response["FirstName"])
+    print(player_data)
+    if player_data:
+        stats_array.append(statsapi.player_stat_data(player_data[0]['id'], group=group_str, type="season", sportId=1))
+    return(stats_array)
+
 
 if __name__ == '__main__':
     app.run(debug=True, host=os.getenv('IP', '0.0.0.0'), 
