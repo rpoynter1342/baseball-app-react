@@ -32,9 +32,9 @@ export default function StandingsTable({division, teamLogos}) {
                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
               >
                 <TableCell component="th" scope="row">
-                  <Grid container>
-                    <Avatar src={teamLogos.teams[row.Key]} sx={{objectFit: 'contain', width: 14, height: 14 }}/> 
-                    <Link to={`/team/${row.Key}`}>{row.Key + ' ' + row.Name}</Link>
+                  <Grid container alignItems="center">
+                    <Avatar src={teamLogos.teams[row.Key]} sx={{objectFit: 'contain', width: 15, height: 15 }}/> &nbsp;
+                    <Link to={`/team/${row.Key}`}>{row.Key + ' '}{row.Name == 'Diamondbacks' ? 'DBacks' : row.Name}</Link>
                   </Grid>
                 </TableCell>
                 <TableCell align="right">{row.DivisionRank}</TableCell>

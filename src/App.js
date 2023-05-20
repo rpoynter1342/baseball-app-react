@@ -19,8 +19,15 @@ import Players from './Pages/Players'
 import SportsBaseballIcon from '@mui/icons-material/SportsBaseball';
 import Player from './Pages/Player'
 function App() {
+
+
+
   const [data,setData] = React.useState([])
   
+    const handleCallbackResponse = (res) => {
+      console.log(res)
+    }
+
     async function mainFetch() {
       // main_home needs: teams, standings, news
     try {
@@ -39,6 +46,7 @@ function App() {
 
 
   React.useEffect(() => {
+    
     mainFetch()
   }, []);
   
@@ -74,6 +82,7 @@ function App() {
           })
         }
       </Routes>
+        
     </MiniDrawer>
   );
 }

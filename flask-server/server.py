@@ -8,6 +8,14 @@ import datetime
 import statsapi
 
 
+import pymongo
+
+from pymongo import MongoClient
+
+cluster = MongoClient("mongodb+srv://rpoynter:XMQd9Tjeu2UWuYn8@cluster0.9nhvm5r.mongodb.net/?retryWrites=true&w=majority")
+db = cluster["fantasy"]
+collection = db["test"]
+
 app = Flask(__name__)
 CORS(app)
 

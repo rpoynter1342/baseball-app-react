@@ -1,6 +1,9 @@
+//yes this is very ugly i know
+
 import * as React from "react";
 import { Link, Routes, Route } from "react-router-dom";
 import { styled, useTheme } from "@mui/material/styles";
+
 import Box from "@mui/material/Box";
 import MuiDrawer from "@mui/material/Drawer";
 import MuiAppBar from "@mui/material/AppBar";
@@ -10,7 +13,6 @@ import CssBaseline from "@mui/material/CssBaseline";
 import Typography from "@mui/material/Typography";
 import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
-import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import ListItem from "@mui/material/ListItem";
@@ -18,6 +20,10 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Tooltip from '@mui/material/Tooltip';
+import Grid from '@mui/material/Grid'
+import Button from '@mui/material/Button'
+
+import jwt_decode from "jwt-decode"
 
 const drawerWidth = 240;
 
@@ -89,6 +95,30 @@ const Drawer = styled(MuiDrawer, {
 export default function MiniDrawer(props) {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
+  const [user, setUser] = React.useState({})
+  React.useEffect(() => {
+    /* global google */
+    google.accounts.id.initialize({
+      client_id: "543204222025-vu2ci05c2kei4pcspud0pi81peddd2tf.apps.googleusercontent.com",
+      callback: handleCallbackResponse
+    });
+
+    google.accounts.id.renderButton(
+      document.getElementById('signIn'),
+      { theme: "", size: "large", shape: 'pill', type: "icon" }
+    )
+  }, [])
+  
+  const handleCallbackResponse = (res) => {
+    const user = jwt_decode(res.credential)
+    setUser(user)
+    document.querySelector('#signIn').hidden = true
+  }
+
+  const handleSignOut = (e) => {
+    setUser({})
+    document.querySelector('#signIn').hidden = false
+  }
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -115,10 +145,21 @@ export default function MiniDrawer(props) {
           >
           
           </IconButton>
-          <Typography variant="h6" noWrap component="div">
-            Fantasy and Stats
-          </Typography>
-      
+          <Grid container justifyContent="space-between" alignItems="center">
+            <Typography variant="h6" noWrap component="div">
+              Fantasy and Stats
+            </Typography>
+        
+              <div id="signIn"></div>
+              {
+                Object.keys(user).length != 0 &&
+                <Button variant="" id="signOut" onClick={handleSignOut}>LogOut</Button>
+              }
+                
+              
+              
+            
+          </Grid>
         </Toolbar>
       </AppBar>
       <Drawer variant="permanent" open={open}>
