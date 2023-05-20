@@ -6,13 +6,13 @@ import os
 import json 
 import datetime
 import statsapi
-
+from private import link
 
 import pymongo
 
 from pymongo import MongoClient
 
-cluster = MongoClient("mongodb+srv://rpoynter:XMQd9Tjeu2UWuYn8@cluster0.9nhvm5r.mongodb.net/?retryWrites=true&w=majority")
+cluster = MongoClient(link)
 db = cluster["fantasy"]
 collection = db["test"]
 

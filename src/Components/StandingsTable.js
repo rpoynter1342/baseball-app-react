@@ -14,15 +14,18 @@ export default function StandingsTable({division, teamLogos}) {
     console.log(teamLogos)
     return (
 
-      <TableContainer sx={{ maxWidth: 450, minWidth: 450 }} component={Paper}>
+      <TableContainer sx={{  }} component={Paper}>
         <Table  size="small">
           <TableHead>
             <TableRow>
                 <TableCell>{division[0].League + ' ' + division[0].Division}</TableCell>
-                <TableCell>Rank</TableCell>
+                <TableCell>League Rank</TableCell>
                 <TableCell>Wins</TableCell>
                 <TableCell>Losses</TableCell>
                 <TableCell>Win PCT</TableCell>
+                <TableCell>Runs Scored</TableCell>
+                <TableCell>Runs/Game</TableCell>
+                <TableCell>Runs Against</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -33,14 +36,18 @@ export default function StandingsTable({division, teamLogos}) {
               >
                 <TableCell component="th" scope="row">
                   <Grid container alignItems="center">
+                  
                   <img src={teamLogos.teams[row.Key]} height="15px" width="15px"/> &nbsp;
                     <Link style={{ textDecoration: 'none', color: 'rgba(0, 0, 0, 0.87)' }} to={`/team/${row.Key}`}>{row.Key + ' '}{row.Name == 'Diamondbacks' ? 'DBacks' : row.Name}</Link>
                   </Grid>
                 </TableCell>
-                <TableCell align="right">{row.DivisionRank}</TableCell>
+                <TableCell align="right">{row.LeagueRank}</TableCell>
                 <TableCell align="right">{row.Wins}</TableCell>
                 <TableCell align="right">{row.Losses}</TableCell>
                 <TableCell align="right">{row.Percentage.toFixed (3)}</TableCell>
+                <TableCell align="right">{row.RunsScored}</TableCell>
+                <TableCell align="right">{(row.RunsScored/(row.Wins + row.Losses)).toFixed(1)}</TableCell>
+                <TableCell align="right">{row.RunsAgainst}</TableCell>
               </TableRow>
             ))}
           </TableBody>

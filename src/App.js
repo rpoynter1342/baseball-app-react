@@ -10,6 +10,7 @@ import GroupsIcon from '@mui/icons-material/Groups';
 import CurrentGames from './Pages/CurrentGames';
 import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 import Fantasy from './Pages/Fantasy';
+import Following from './Pages/Following'
 import AddIcon from '@mui/icons-material/Add';
 import MiniDrawer from "./Components/MiniDrawer.js";
 import Team from './Pages/Team'
@@ -18,6 +19,8 @@ import Box from "@mui/material/Box";
 import Players from './Pages/Players'
 import SportsBaseballIcon from '@mui/icons-material/SportsBaseball';
 import Player from './Pages/Player'
+import BookmarkIcon from '@mui/icons-material/Bookmark';
+import WhatshotIcon from '@mui/icons-material/Whatshot';
 
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from "@mui/material/CssBaseline";
@@ -77,10 +80,11 @@ function App() {
   }
   const pages = [
     { name: 'Home', path: '/', element: <Home props={data} />, icon: <HomeIcon /> },
-    { name: 'Top Players', path: '/top', element: <TopPlayers />, icon: <StarIcon /> },
+    { name: 'Top Players', path: '/top', element: <TopPlayers />, icon: <WhatshotIcon /> },
     { name: 'All Players', path: '/players', element: <Players />, icon: <SportsBaseballIcon /> },
     { name: 'Teams', path: '/teams', element: <Teams />, icon: <GroupsIcon /> },
     { name: 'Current Games', path: '/curGames', element: <CurrentGames />, icon: <NotificationsActiveIcon /> },
+    { name: 'Following', path: '/following', element: <Following />, icon: <StarIcon /> },
     { name: 'Fantasy', path: '/fantasy', element: <Fantasy />, icon: <AddIcon /> }
   ];
 

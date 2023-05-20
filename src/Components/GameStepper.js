@@ -16,6 +16,8 @@ function GameStepper(props) {
   const theme = useTheme();
   const [activeStep, setActiveStep] = React.useState(0);
   const getCurrentTime = (dateTimeUTC, area) => {
+    dateTimeUTC = dateTimeUTC == null ? new Date.UTC() : dateTimeUTC
+
     dateTimeUTC = dateTimeUTC+'Z'
 
     if (area == 'header') {

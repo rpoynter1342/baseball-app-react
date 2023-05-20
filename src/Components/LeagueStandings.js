@@ -2,7 +2,7 @@ import * as React from 'react';
 import StandingsTable from './StandingsTable'
 import Grid from '@mui/material/Grid'
 export default function LeagueStandings({standings, teamLogos}) {
-    
+  console.log(standings)
   const map = {
     AL: [
         {
