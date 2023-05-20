@@ -11,7 +11,7 @@ import Grid from '@mui/material/Grid'
 import { Link, Routes, Route } from "react-router-dom";
 
 export default function StandingsTable({division, teamLogos}) {
-    // console.log(teamLogos)
+    console.log(teamLogos)
     return (
 
       <TableContainer sx={{ maxWidth: 450, minWidth: 450 }} component={Paper}>
@@ -33,8 +33,8 @@ export default function StandingsTable({division, teamLogos}) {
               >
                 <TableCell component="th" scope="row">
                   <Grid container alignItems="center">
-                    <Avatar src={teamLogos.teams[row.Key]} sx={{objectFit: 'contain', width: 15, height: 15 }}/> &nbsp;
-                    <Link to={`/team/${row.Key}`}>{row.Key + ' '}{row.Name == 'Diamondbacks' ? 'DBacks' : row.Name}</Link>
+                  <img src={teamLogos.teams[row.Key]} height="15px" width="15px"/> &nbsp;
+                    <Link style={{ textDecoration: 'none', color: 'rgba(0, 0, 0, 0.87)' }} to={`/team/${row.Key}`}>{row.Key + ' '}{row.Name == 'Diamondbacks' ? 'DBacks' : row.Name}</Link>
                   </Grid>
                 </TableCell>
                 <TableCell align="right">{row.DivisionRank}</TableCell>

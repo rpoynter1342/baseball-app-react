@@ -1,5 +1,4 @@
 * update current games in real time
 * bold table headers
 * fix img inside avater
-* dark mode
 * move all to useContext or Redux?

@@ -47,7 +47,7 @@ export default function RosterStatsTable({roster, stats}) {
                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                >
                 <TableCell component="th" scope="row">
-                <Link to={`/player/${player.PlayerID}`}>{player.FirstName + ' ' + player.LastName + ' ('+player.Position+')'}</Link>
+                <Link style={{ textDecoration: 'none', color: 'rgba(0, 0, 0, 0.87)' }} to={`/player/${player.PlayerID}`}>{player.FirstName + ' ' + player.LastName + ' ('+player.Position+')'}</Link>
                 </TableCell>
                 <TableCell component="th" scope="row">
                     {
@@ -147,7 +147,7 @@ export default function RosterStatsTable({roster, stats}) {
                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                >
                 <TableCell component="th" scope="row">
-                    <Link to={`/player/${player.PlayerID}`}>{player.FirstName + ' ' + player.LastName + ' ('+player.Position+')'}</Link>
+                    <Link style={{ textDecoration: 'none', color: 'rgba(0, 0, 0, 0.87)' }} to={`/player/${player.PlayerID}`}>{player.FirstName + ' ' + player.LastName + ' ('+player.Position+')'}</Link>
                 </TableCell>
                 <TableCell component="th" scope="row">
                     {

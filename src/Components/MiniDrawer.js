@@ -4,12 +4,15 @@ import * as React from "react";
 import { Link, Routes, Route } from "react-router-dom";
 import { styled, useTheme } from "@mui/material/styles";
 
+import CssBaseline from "@mui/material/CssBaseline";
+import { createTheme } from '@mui/material/styles';
+
+import Switch from '@mui/material/Switch';
 import Box from "@mui/material/Box";
 import MuiDrawer from "@mui/material/Drawer";
 import MuiAppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import List from "@mui/material/List";
-import CssBaseline from "@mui/material/CssBaseline";
 import Typography from "@mui/material/Typography";
 import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
@@ -24,6 +27,20 @@ import Grid from '@mui/material/Grid'
 import Button from '@mui/material/Button'
 
 import jwt_decode from "jwt-decode"
+
+const darkTheme = createTheme({
+  palette: {
+    mode: 'dark',
+  },
+});
+
+const lightTheme = createTheme({
+  palette: {
+    mode: 'light',
+  },
+});
+
+const label = { inputProps: { 'aria-label': 'Darkmode Toggle' } };
 
 const drawerWidth = 240;
 
@@ -83,12 +100,10 @@ const Drawer = styled(MuiDrawer, {
   whiteSpace: "nowrap",
   boxSizing: "border-box",
   ...(open && {
-    ...openedMixin(theme),
-    "& .MuiDrawer-paper": openedMixin(theme)
+    ...openedMixin(theme)
   }),
   ...(!open && {
     ...closedMixin(theme),
-    "& .MuiDrawer-paper": closedMixin(theme)
   })
 }));
 
@@ -108,7 +123,9 @@ export default function MiniDrawer(props) {
       { theme: "", size: "large", shape: 'pill', type: "icon" }
     )
   }, [])
-  
+  const handleToggle = (e) => {
+    e.target.checked ? props.setter(darkTheme) : props.setter(lightTheme)
+  }
   const handleCallbackResponse = (res) => {
     const user = jwt_decode(res.credential)
     setUser(user)
@@ -148,6 +165,7 @@ export default function MiniDrawer(props) {
           <Grid container justifyContent="space-between" alignItems="center">
             <Typography variant="h6" noWrap component="div">
               Fantasy and Stats
+              
             </Typography>
         
               <div id="signIn"></div>
@@ -172,7 +190,7 @@ export default function MiniDrawer(props) {
             )}
           </IconButton>
         </DrawerHeader>
-        <Divider />
+        <Grid container flexDirection="column" height="100%" justifyContent="space-between">
         <List>
           {props.pages.map((page) => {
             return (
@@ -201,7 +219,7 @@ export default function MiniDrawer(props) {
                     >
                       {page.icon}
                     </ListItemIcon>
-                    <ListItemText primary={page.name} sx={{ opacity: open ? 1 : 0 }} />
+                    
                   </ListItemButton>
                   </Tooltip>
                 </Link>
@@ -209,12 +227,18 @@ export default function MiniDrawer(props) {
             );
           })}
         </List>
-
+        <Switch onClick={handleToggle} {...label} />
+        
+        </Grid>
+        
       </Drawer>
+      
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <DrawerHeader />
         {props.children}
+        
       </Box>
+      
     </Box>
   );
 }

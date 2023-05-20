@@ -25,10 +25,12 @@ export default function Logos({viewing, teams, standings}) {
           return (
          
             <Grid sx={{minWidth: '100%'}} container display="flex" justifyContent="space-evenly" alignItems="center" flexDirection="column">
-              <Link to={`/team/${team.team.Key}`}>
+              <Link to={`/team/${team.team.Key}`} style={{ textDecoration: 'none', color: 'rgba(0, 0, 0, 0.87)' }}>
                 {team.team.Key}
               </Link>
-              <Avatar sx={{ width: 70, height: 70, "& > img": { objectFit: 'scale-down' } }} src={team.team.WikipediaLogoUrl} />
+              <Link to={`/team/${team.team.Key}`} style={{ textDecoration: 'none', color: 'rgba(0, 0, 0, 0.87)' }}>
+                <img src={team.team.WikipediaLogoUrl} height="70px" width="70px"/>
+              </Link>
               <Typography variant="caption" display="block" gutterBottom>
                 ({team.standing[0].Wins} - {team.standing[0].Losses})
               </Typography>
