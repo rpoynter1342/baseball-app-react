@@ -1,4 +1,6 @@
 * update current games in real time
 * bold table headers
-* fix fix dark mode Link tags
-* move all to useContext or Redux?
+* fix dark mode Link tags
+* move all to zustand
+* refactor fetches into fetches.js
+* switch to pybaseball

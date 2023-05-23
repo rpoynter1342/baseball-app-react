@@ -5,13 +5,25 @@ import requests
 import os
 import json 
 import datetime
-import statsapi
 from private import link
+from datetime import datetime, timedelta
+# we will use two different apis pybaseball is for more in depth data and statsapi is for more global stuff
+import statsapi
+from pybaseball import *
+
+import pandas as pd
 
 import pymongo
 
 from pymongo import MongoClient
 
+import datetime
+
+today = datetime.date.today()
+past_week = today - timedelta(days=7)
+year = today.year
+
+# mongo db init, var link is hidden in a 'private.py' file and not tracked by git because github yealled at me
 cluster = MongoClient(link)
 db = cluster["fantasy"]
 collection = db["test"]
@@ -19,25 +31,29 @@ collection = db["test"]
 app = Flask(__name__)
 CORS(app)
 
+# needs data builder function
+
+
+season_data = statsapi.latest_season()
+cur_season = season_data['seasonId']
+
+# get list of teamID nums for STATSAPI use
+
+
+teams = statsapi.get('teams', {'sportId': 1, 'season': year})
+
+
+
 @app.route('/main_home')
 def main_home():
-    print('hi')
+    # needs teams, standings, scores/upcoming games
+    # maybe news
+    
     data = {}
-    today = datetime.date.today()
-    print(str(today))
-    res = requests.get('https://api.sportsdata.io/v3/mlb/scores/json/teams?key=b0608b16e8984da68d84bf40d21e26d0')
-    response = json.loads(res.text)
-    data["teams"] = response
-    res = requests.get('https://api.sportsdata.io/v3/mlb/scores/json/Standings/2023?key=b0608b16e8984da68d84bf40d21e26d0')
-    response = json.loads(res.text)
-    data["standings"] = response
-    res = requests.get('https://api.sportsdata.io/v3/mlb/scores/json/News?key=b0608b16e8984da68d84bf40d21e26d0')
-    response = json.loads(res.text)
-    data["news"] = response
-    print(response)
-    res = requests.get('https://api.sportsdata.io/v3/mlb/scores/json/ScoresBasic/'+str(today)+'?key=b0608b16e8984da68d84bf40d21e26d0')
-    response = json.loads(res.text)
-    data["currentGames"] = response
+    data['teams'] = teams
+    data['standings'] = statsapi.get('standings', {'leagueId': '103,104'})
+    data['schedule'] = statsapi.get('schedule', {'sportId': 1, 'startDate': past_week,'endDate': today})
+    data['divisions'] = statsapi.get('divisions', {'sportId': 1})
     return(data)
 
 @app.route('/roster')

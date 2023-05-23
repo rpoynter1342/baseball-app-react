@@ -1,30 +1,19 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 
-import Home from "./Pages/Home";
-import HomeIcon from "@mui/icons-material/Home";
-import TopPlayers from './Pages/TopPlayers';
-import StarIcon from '@mui/icons-material/Star';
-import Teams from './Pages/Teams';
-import GroupsIcon from '@mui/icons-material/Groups';
-import CurrentGames from './Pages/CurrentGames';
-import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
-import Fantasy from './Pages/Fantasy';
-import Following from './Pages/Following'
-import AddIcon from '@mui/icons-material/Add';
+import useStore from './store'
+
+
 import MiniDrawer from "./Components/MiniDrawer.js";
-import Team from './Pages/Team'
+
 import SkeletonLoad from "./Components/SkeletonLoad";
 import Box from "@mui/material/Box";
-import Players from './Pages/Players'
-import SportsBaseballIcon from '@mui/icons-material/SportsBaseball';
-import Player from './Pages/Player'
-import BookmarkIcon from '@mui/icons-material/Bookmark';
-import WhatshotIcon from '@mui/icons-material/Whatshot';
+
 
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from "@mui/material/CssBaseline";
 
+import './styles.css';
 const darkTheme = createTheme({
   palette: {
     mode: 'dark',
@@ -41,13 +30,12 @@ const lightTheme = createTheme({
 
 function App() {
 
-  const [data, setData] = React.useState([])
-  const [theme, setTheme] = React.useState(lightTheme)
+  const pages = useStore(state => state.pages)
+  const hiddenPages = useStore(state => state.hiddenPages)
+  const data = useStore(state => state.mainData)
+  const setMainData = useStore(state => state.setMainData)
 
-  
-  const handleCallbackResponse = (res) => {
-    console.log(res)
-  }
+  const [theme, setTheme] = React.useState(lightTheme)
 
   async function mainFetch() {
     // main_home needs: teams, standings, news
@@ -58,18 +46,19 @@ function App() {
       }
       const jsonData = await response.json();
 
-      setData(jsonData);
+      setMainData(jsonData);
     } catch (error) {
       console.error('Error fetching data:', error);
     }
   }
 
-
-
+  console.log(data)
   React.useEffect(() => {
-
-    mainFetch()
-  }, []);
+      if (data.length == 0) {
+        mainFetch()
+      }
+    }, []);
+  
 
   if (data.length == 0) {
     return (
@@ -78,35 +67,23 @@ function App() {
       </Box>
     )
   }
-  const pages = [
-    { name: 'Home', path: '/', element: <Home props={data} />, icon: <HomeIcon /> },
-    { name: 'Top Players', path: '/top', element: <TopPlayers />, icon: <WhatshotIcon /> },
-    { name: 'All Players', path: '/players', element: <Players />, icon: <SportsBaseballIcon /> },
-    { name: 'Teams', path: '/teams', element: <Teams />, icon: <GroupsIcon /> },
-    { name: 'Current Games', path: '/curGames', element: <CurrentGames />, icon: <NotificationsActiveIcon /> },
-    { name: 'Following', path: '/following', element: <Following />, icon: <StarIcon /> },
-    { name: 'Fantasy', path: '/fantasy', element: <Fantasy />, icon: <AddIcon /> }
-  ];
-
-  const hiddenPages = [
-    { name: 'Team', path: '/team/:key', element: <Team teams={data.teams} standings={data.standings} /> },
-    { name: 'Player', path: '/player/:key', element: <Player /> },
-  ]
+  
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <MiniDrawer pages={pages} setter={setTheme}>
         <Routes>
-          {pages.map((page) => {
-            return <Route path={page.path} element={page.element} />;
-          })}
+          {
+            pages.map((page) => {
+              return <Route path={page.path} element={page.element} />;
+            })
+          }
           {
             hiddenPages.map((page) => {
               return <Route path={page.path} element={page.element} />;
             })
           }
         </Routes>
-
       </MiniDrawer>
     </ThemeProvider>
   );

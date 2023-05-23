@@ -14,14 +14,14 @@ import MuiAppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import List from "@mui/material/List";
 import Typography from "@mui/material/Typography";
-import Divider from "@mui/material/Divider";
+
 import IconButton from "@mui/material/IconButton";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
+
 import Tooltip from '@mui/material/Tooltip';
 import Grid from '@mui/material/Grid'
 import Button from '@mui/material/Button'
@@ -111,6 +111,7 @@ export default function MiniDrawer(props) {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
   const [user, setUser] = React.useState({})
+
   React.useEffect(() => {
     /* global google */
     google.accounts.id.initialize({
@@ -120,9 +121,10 @@ export default function MiniDrawer(props) {
 
     google.accounts.id.renderButton(
       document.getElementById('signIn'),
-      { theme: "", size: "large", shape: 'pill', type: "icon" }
+      { theme: "", size: "large", shape: 'pill', type: "icon", display: 'none' }
     )
   }, [])
+  
   const handleToggle = (e) => {
     e.target.checked ? props.setter(darkTheme) : props.setter(lightTheme)
   }
@@ -144,7 +146,7 @@ export default function MiniDrawer(props) {
   const handleDrawerClose = () => {
     setOpen(false);
   };
-
+  
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />

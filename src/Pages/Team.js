@@ -1,17 +1,20 @@
-import { react } from '@babel/types'
 import React from 'react'
 import { useParams } from 'react-router'
 import SkeletonLoad from "../Components/SkeletonLoad";
 import Box from "@mui/material/Box";
 import RosterStatsTable from '../Components/RosterStatsTable';
-export default function Team({teams, standings}) {
-  
-  const [data, setData] = React.useState([])
-  
+import useStore from '../store'
+
+export default function Team() {
+  const data = useStore(state => state.mainData)
+
+  // const data = useStore(state => state.mainData)
+  // const setMainData = useStore(state => state.setMainData)
+
   const { key } = useParams()
 
 
-  const curTeam = teams.find(team => {
+  const curTeam = data[0].teams.find(team => {
     return team.Key == key
   })
 
@@ -25,9 +28,10 @@ export default function Team({teams, standings}) {
         throw new Error(`HTTP error! Status: ${response.status}`);
         }
         const jsonData = await response.json();
-        setData(jsonData)
+        console.log(jsonData)
+        setTeamData(jsonData)
         } catch (error) {
-            console.error('Error fetching data:', error);
+          console.error('Error fetching data:', error);
         }
   }
 
@@ -36,8 +40,7 @@ export default function Team({teams, standings}) {
   React.useEffect(() => {
     fetchRoster()
   }, []);
-  
-  if (data.length == 0) {
+  if (teamData.length == 0) {
     return (
       <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
         <SkeletonLoad />
@@ -46,7 +49,7 @@ export default function Team({teams, standings}) {
   }
   return (
     <>
-        <RosterStatsTable roster={data.roster} stats={data.stats}/>
+        <RosterStatsTable roster={teamData.roster} stats={teamData.stats}/>
     </>
   )
 }

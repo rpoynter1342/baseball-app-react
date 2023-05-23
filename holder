@@ -1,0 +1,68 @@
+<Paper
+      elevation={1}
+      sx={{
+        display: 'flex',
+        alignItems: 'center',
+        pl: 2,
+        bgcolor: 'background.default',
+        flexDirection: 'column',
+        padding: 7,
+      }}
+    >
+      {
+        new Date(data[0].schedule.dates[0].games[activeStep].gameDate).toLocaleDateString()
+      }
+
+      <Grid display="flex" justifyContent="space-evenly" alignItems="center" flexDirection="row">
+        {
+          /*
+<Link to={`/team/${team.team.Key}`} style={{ textDecoration: 'none', color: 'rgba(0, 0, 0, 0.87)' }}>
+      {team.team.Key}
+    </Link>
+    <Link to={`/team/${team.team.Key}`} style={{ textDecoration: 'none', color: 'rgba(0, 0, 0, 0.87)' }}>
+      <img src={team.team.WikipediaLogoUrl} height="70px" width="70px"/>
+    </Link>
+    <Typography variant="caption" display="block" gutterBottom>
+      ({team.standing[0].Wins} - {team.standing[0].Losses})
+    </Typography>
+*/
+
+        }
+      </Grid>
+      {
+        new Date(data[0].schedule.dates[0].games[activeStep].gameDate).toLocaleTimeString()
+      }
+      <Grid container display="flex" justifyContent="space-evenly">
+        <MobileStepper
+          variant="progress"
+          steps={data[0].schedule.dates[0].games.length}
+          position="static"
+          activeStep={activeStep}
+          sx={{ maxWidth: 400, flexGrow: 1 }}
+          nextButton={
+            <Button
+              size="small"
+              onClick={handleNext}
+              disabled={activeStep === data[0].schedule.dates[0].games.length - 1}
+            >
+              Next
+              {theme.direction === 'rtl' ? (
+                <KeyboardArrowLeft />
+              ) : (
+                <KeyboardArrowRight />
+              )}
+            </Button>
+          }
+          backButton={
+            <Button size="small" onClick={handleBack} disabled={activeStep === 0}>
+              {theme.direction === 'rtl' ? (
+                <KeyboardArrowRight />
+              ) : (
+                <KeyboardArrowLeft />
+              )}
+              Back
+            </Button>
+          }
+        />
+      </Grid>
+    </Paper>

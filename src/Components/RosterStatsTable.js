@@ -1,18 +1,18 @@
 import * as React from 'react';
-import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
-import TableCell, { tableCellClasses } from '@mui/material/TableCell';
+import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid'
-import { Link, Routes, Route } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 
 
 export default function RosterStatsTable({roster, stats}) {
+  console.log(roster)
   const rosterStatsMap = roster.map(player => {
     const stat = stats.find(i2 => i2.first_name.normalize('NFD').replace(/[\u0300-\u036f]/g, '').split(' ')[0] === player.FirstName.normalize('NFD').replace(/[\u0300-\u036f]/g, '').split(' ')[0] && i2.last_name.normalize('NFD').replace(/[\u0300-\u036f]/g, '').split(' ')[0] === player.LastName.normalize('NFD').replace(/[\u0300-\u036f]/g, '').split(' ')[0])
     if (stat) {
