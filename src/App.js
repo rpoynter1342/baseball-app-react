@@ -33,8 +33,11 @@ function App() {
   const pages = useStore(state => state.pages)
   const hiddenPages = useStore(state => state.hiddenPages)
   const data = useStore(state => state.mainData)
+  const user = useStore(state => state.user)
+  const isLoggedIn = Object.keys(user).length != 0
   const setMainData = useStore(state => state.setMainData)
 
+  console.log(isLoggedIn)
   const [theme, setTheme] = React.useState(lightTheme)
 
   async function mainFetch() {
@@ -75,7 +78,7 @@ function App() {
         <Routes>
           {
             pages.map((page) => {
-              return <Route path={page.path} element={page.element} />;
+              return <Route id={page.name} path={page.path} element={page.element} />
             })
           }
           {

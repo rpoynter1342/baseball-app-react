@@ -1,17 +1,15 @@
-from flask import Flask, jsonify, request
+from flask import Flask, session, abort, redirect, request, jsonify
+from jose import jwt
+from jose.exceptions import JWTError
 from flask_cors import CORS
 from unidecode import unidecode
 import requests
 import os
-import json 
 import datetime
-from private import link
+from private import link, GOOGLE_CLIENT_ID, GOOGLE_SECRET
 from datetime import datetime, timedelta
-# we will use two different apis pybaseball is for more in depth data and statsapi is for more global stuff
-import statsapi
-from pybaseball import *
 
-import pandas as pd
+import statsapi
 
 import pymongo
 
@@ -25,14 +23,11 @@ year = today.year
 
 # mongo db init, var link is hidden in a 'private.py' file and not tracked by git because github yealled at me
 cluster = MongoClient(link)
-db = cluster["fantasy"]
-collection = db["test"]
+db = cluster["App"]
+collection = db["users"]
 
 app = Flask(__name__)
 CORS(app)
-
-# needs data builder function
-
 
 season_data = statsapi.latest_season()
 cur_season = season_data['seasonId']
@@ -43,6 +38,77 @@ cur_season = season_data['seasonId']
 teams = statsapi.get('teams', {'sportId': 1, 'season': year})
 
 
+def get_public_key(kid):
+    url = "https://www.googleapis.com/oauth2/v3/certs"
+    response = requests.get(url)
+    keys = response.json()["keys"]
+    for key in keys:
+        if key["kid"] == kid:
+            return key
+    return None
+
+
+@app.route('/token', methods=['POST'])
+def token():
+    if not request.is_json:
+        return jsonify({"msg": "Missing JSON in request"}), 400
+
+    token = request.json.get('token', None)
+    if not token:
+        return jsonify({"msg": "Missing token parameter"}), 400
+
+    # Token validation
+    try:
+        # This will raise an error if the token is invalid
+        header = jwt.get_unverified_header(token)
+        key_id = header.get('kid')
+        key = get_public_key(key_id)
+        if key:
+            decoded = jwt.decode(token, key, algorithms='RS256', audience=GOOGLE_CLIENT_ID)
+        else:
+            raise JWTError("Invalid key ID")
+    except JWTError as e:
+        return jsonify({"msg": "Invalid token", "error": str(e)}), 400
+
+    # If we get here, the token is valid
+    user_id = decoded['sub']
+    
+    user = collection.find_one({'userid': user_id})
+
+    if user is None:
+        new_user = {"userid": user_id}
+        collection.insert_one(new_user)
+        return {user_id: 'New user created.'}, 201
+
+    return {'userid': user_id, 'favorites': user['favorites']}, 200
+
+@app.route('/add_fav', methods=['POST'])
+def add_fav():
+    data = request.get_json()
+    new_fav = data['newFav']
+    user_id = data['user']['userid']
+    query = {'userid': user_id}
+    update = { "$push": {"favorites": new_fav} }
+
+    collection.update_one(query, update)
+    
+    user = collection.find_one({'userid': user_id})
+    print(user)
+    return {'userid': user_id, 'favorites': user['favorites']}, 200
+
+@app.route('/remove_fav', methods=['POST'])
+def remove_fav():
+    data = request.get_json()
+    remove = data['remove']
+    user_id = data['user']['userid']
+    query = {'userid': user_id}
+    update = { "$pull": {"favorites": remove} }
+
+    collection.update_one(query, update)
+    
+    user = collection.find_one({'userid': user_id})
+    print(user)
+    return {'userid': user_id, 'favorites': user['favorites']}, 200
 
 @app.route('/main_home')
 def main_home():
@@ -55,49 +121,6 @@ def main_home():
     data['schedule'] = statsapi.get('schedule', {'sportId': 1, 'startDate': past_week,'endDate': today})
     data['divisions'] = statsapi.get('divisions', {'sportId': 1})
     return(data)
-
-@app.route('/roster')
-def roster():
-    team_key = request.args.get('key')
-    # print(team_key)
-    data = {}
-    active_roster = []
-    stats_array = []
-    res = requests.get('https://api.sportsdata.io/v3/mlb/scores/json/PlayersBasic/'+team_key+'?key=b0608b16e8984da68d84bf40d21e26d0')
-    response = json.loads(res.text)
-    def only_active(array):
-        for player in array:
-            if player["Status"] == "Active":
-                active_roster.append(player)
-    only_active(response)
-    data["roster"] = active_roster
-    for player in data['roster']:
-        player_data = statsapi.lookup_player(player["LastName"] + ', ' + player["FirstName"])
-        if player_data:  # Check if the list is not empty
-            stats_array.append(statsapi.player_stat_data(player_data[0]['id'], group="[hitting,pitching,fielding]", type="season", sportId=1))
-        else:
-            stats_array.append({player["LastName"] + ', ' + player["FirstName"]: ' EMPTY?'}) 
-    data["stats"] = stats_array
-    print(len(data["roster"]))
-    return(data)
-
-@app.route('/player')
-def player_data():
-    player_id = request.args.get('id')
-    stats_array = []
-    res = requests.get('https://api.sportsdata.io/v3/mlb/scores/json/Player/'+player_id+'?key=b0608b16e8984da68d84bf40d21e26d0')
-    response = json.loads(res.text)
-    is_pitcher = response['PositionCategory'] != 'P'
-    group_str = ""
-    if is_pitcher:
-        group_str = "[pithcing]"
-    else:
-        group_str = "[hitting, fielding]"
-    player_data = statsapi.lookup_player(response["LastName"] + ', ' + response["FirstName"])
-    print(player_data)
-    if player_data:
-        stats_array.append(statsapi.player_stat_data(player_data[0]['id'], group=group_str, type="season", sportId=1))
-    return(stats_array)
 
 
 if __name__ == '__main__':

@@ -6,7 +6,6 @@ import { styled, useTheme } from "@mui/material/styles";
 
 import CssBaseline from "@mui/material/CssBaseline";
 import { createTheme } from '@mui/material/styles';
-
 import Switch from '@mui/material/Switch';
 import Box from "@mui/material/Box";
 import MuiDrawer from "@mui/material/Drawer";
@@ -26,7 +25,9 @@ import Tooltip from '@mui/material/Tooltip';
 import Grid from '@mui/material/Grid'
 import Button from '@mui/material/Button'
 
-import jwt_decode from "jwt-decode"
+import jwtDecode from "jwt-decode"
+
+import useStore from '../store'
 
 const darkTheme = createTheme({
   palette: {
@@ -110,8 +111,11 @@ const Drawer = styled(MuiDrawer, {
 export default function MiniDrawer(props) {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
-  const [user, setUser] = React.useState({})
-
+  //Object.keys(user).length != 0
+  const user = useStore(state => state.user)
+  const setUser = useStore(state => state.setUser)
+  
+  const isLoggedIn = Object.keys(user).length != 0
   React.useEffect(() => {
     /* global google */
     google.accounts.id.initialize({
@@ -123,20 +127,68 @@ export default function MiniDrawer(props) {
       document.getElementById('signIn'),
       { theme: "", size: "large", shape: 'pill', type: "icon", display: 'none' }
     )
-  }, [])
+    
+    
+    if (isLoggedIn) {
+      document.querySelector('#signIn').hidden = true
+      document.querySelector('[aria-label="Favorites"]').closest('li').style.display = ''
+      document.querySelector('[aria-label="Fantasy"]').closest('li').style.display = ''
+    } else {
+      document.querySelector('#signIn').hidden = false
+      document.querySelector('[aria-label="Favorites"]').closest('li').style.display = 'none'
+      document.querySelector('[aria-label="Fantasy"]').closest('li').style.display = 'none'
+    }
+    const storedJwt = localStorage.getItem('jwt');
   
+    if (storedJwt) {
+      // If a JWT is stored, attempt to log in with it
+      login(storedJwt).then((data) => {
+        document.querySelector('#signIn').hidden = true
+        setUser(data);
+        document.querySelector('[aria-label="Favorites"]').closest('li').style.display = ''
+        document.querySelector('[aria-label="Fantasy"]').closest('li').style.display = ''
+      });
+    }
+  }, [])
+  console.log(isLoggedIn)
   const handleToggle = (e) => {
     e.target.checked ? props.setter(darkTheme) : props.setter(lightTheme)
   }
-  const handleCallbackResponse = (res) => {
-    const user = jwt_decode(res.credential)
-    setUser(user)
-    document.querySelector('#signIn').hidden = true
-  }
+  async function login(jwt) {
+    // main_home needs: teams, standings, news
+    const response = await fetch('http://127.0.0.1:4444/token', {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ token: jwt }),
+    });
 
+    localStorage.setItem('jwt', jwt);
+
+    return response.json()
+  }
+  const handleCallbackResponse = (res) => {
+    console.log(res)
+    const user_ = jwtDecode(res.credential)
+    
+    // console.log(user)
+    document.querySelector('#signIn').hidden = true
+    document.querySelector('[aria-label="Favorites"]').closest('li').style.display = ''
+    document.querySelector('[aria-label="Fantasy"]').closest('li').style.display = ''
+
+    login(res.credential).then((data) => {
+      setUser(data)
+    })
+
+  }
+  
   const handleSignOut = (e) => {
     setUser({})
+    localStorage.removeItem('jwt');
     document.querySelector('#signIn').hidden = false
+    document.querySelector('[aria-label="Favorites"]').closest('li').style.display = 'none'
+    document.querySelector('[aria-label="Fantasy"]').closest('li').style.display = 'none'
   }
 
   const handleDrawerOpen = () => {
@@ -146,7 +198,10 @@ export default function MiniDrawer(props) {
   const handleDrawerClose = () => {
     setOpen(false);
   };
-  
+  const handleSignInClick = (e) => {
+    console.log(e)
+  }
+
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
@@ -162,23 +217,24 @@ export default function MiniDrawer(props) {
               ...(open && { display: "none" })
             }}
           >
-          
+
           </IconButton>
           <Grid container justifyContent="space-between" alignItems="center">
             <Typography variant="h6" noWrap component="div">
-              Fantasy and Stats
-              
+              Full Count Fantasy
+
             </Typography>
-        
-              <div id="signIn"></div>
-              {
-                Object.keys(user).length != 0 &&
-                <Button variant="" id="signOut" onClick={handleSignOut}>LogOut</Button>
-              }
-                
-              
-              
-            
+
+            <div id="signIn" onClick={handleSignInClick}></div>
+
+            {
+              Object.keys(user).length != 0 &&
+              <Button variant="" id="signOut" onClick={handleSignOut}>SignOut</Button>
+            }
+
+
+
+
           </Grid>
         </Toolbar>
       </AppBar>
@@ -193,54 +249,54 @@ export default function MiniDrawer(props) {
           </IconButton>
         </DrawerHeader>
         <Grid container flexDirection="column" height="100%" justifyContent="space-between">
-        <List>
-          {props.pages.map((page) => {
-            return (
-              <ListItem
-                key={page.name}
-                disablePadding
-                sx={{ display: "block" }}
-              >
-                <Link to={page.path} style={{ textDecoration: 'none', color: 'grey' }}>
-                <Tooltip title={page.name} placement="right">
-                  <ListItemButton
-                    key={page.name}
-                    sx={{
-                      minHeight: 48,
-                      justifyContent: open ? "initial" : "center",
-                      px: 2.5
-                    }}
-                  >
-                    <ListItemIcon
-                      key={page.name}
-                      sx={{
-                        minWidth: 0,
-                        mr: open ? 3 : 'auto',
-                        justifyContent: 'center',
-                      }}
-                    >
-                      {page.icon}
-                    </ListItemIcon>
-                    
-                  </ListItemButton>
-                  </Tooltip>
-                </Link>
-              </ListItem>
-            );
-          })}
-        </List>
-        <Switch onClick={handleToggle} {...label} />
-        
+          <List>
+            {props.pages.map((page) => {
+              return (
+                <ListItem
+                  key={page.name}
+                  disablePadding
+                  sx={{ display: "block" }}
+                >
+                  <Link to={page.path} style={{ textDecoration: 'none', color: 'grey' }}>
+                    <Tooltip title={page.name} placement="right">
+                      <ListItemButton
+                        key={page.name}
+                        sx={{
+                          minHeight: 48,
+                          justifyContent: open ? "initial" : "center",
+                          px: 2.5
+                        }}
+                      >
+                        <ListItemIcon
+                          key={page.name}
+                          sx={{
+                            minWidth: 0,
+                            mr: open ? 3 : 'auto',
+                            justifyContent: 'center',
+                          }}
+                        >
+                          {page.icon}
+                        </ListItemIcon>
+
+                      </ListItemButton>
+                    </Tooltip>
+                  </Link>
+                </ListItem>
+              );
+            })}
+          </List>
+          <Switch onClick={handleToggle} {...label} />
+
         </Grid>
-        
+
       </Drawer>
-      
+
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <DrawerHeader />
         {props.children}
-        
+
       </Box>
-      
+
     </Box>
   );
 }

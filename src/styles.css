@@ -32,7 +32,6 @@ body {
     padding: 2rem;
     background-color: hsl(280deg, 40%, calc(100% - var(--abs-offset) * 50%));
     border-radius: 1rem;
-    color: #9CA3AF;
     text-align: justify;
     transition: all 0.3s ease-out;
   }

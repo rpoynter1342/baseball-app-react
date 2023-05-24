@@ -18,9 +18,14 @@ import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 import Fantasy from './Pages/Fantasy';
 import Following from './Pages/Following'
 import AddIcon from '@mui/icons-material/Add';
-
+import BookmarkIcon from '@mui/icons-material/Bookmark';
 const store = (set) => ({
-
+    user: {},
+    setUser: data => {
+        set(state => ({
+            user: data
+        }))
+    },
     mainData: [],
     setMainData: (data) => {
                     set(state => ({
@@ -39,7 +44,7 @@ const store = (set) => ({
         { name: 'All Players', path: '/players', element: <Players />, icon: <SportsBaseballIcon /> },
         { name: 'Teams', path: '/teams', element: <Teams />, icon: <GroupsIcon /> },
         { name: 'Current Games', path: '/curGames', element: <CurrentGames />, icon: <NotificationsActiveIcon /> },
-        { name: 'Following', path: '/following', element: <Following />, icon: <StarIcon /> },
+        { name: 'Favorites', path: '/favorites', element: <Following />, icon: <BookmarkIcon /> },
         { name: 'Fantasy', path: '/fantasy', element: <Fantasy />, icon: <AddIcon /> }
       ],
     

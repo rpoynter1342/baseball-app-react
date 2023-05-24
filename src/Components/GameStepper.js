@@ -20,7 +20,8 @@ function GameStepper() {
   const [open, setOpen] = React.useState(false);
   const [fullWidth, setFullWidth] = React.useState(true);
   const [maxWidth, setMaxWidth] = React.useState('sm');
-
+  //Object.keys(user).length != 0
+  const user = useStore(state => state.user)
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -98,7 +99,7 @@ function GameStepper() {
                       return <Chip icon={<CircularProgress size={10} />} label="Live" />
                     case 'Final':
                       return <Chip icon={<PauseCircleFilledIcon sx={{height:'14px', width:'14px'}} />} label="Final" />
-                    case 'Upcoming': 
+                    case 'Preview': 
                       return <Chip icon={<AccessTimeFilledIcon sx={{height:'14px', width:'14px'}} />} label="Upcoming" />
                   }
                  })
