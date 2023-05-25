@@ -26,6 +26,18 @@ const store = (set) => ({
             user: data
         }))
     },
+    storedJwt: {},
+    setStoredJwt: data => {
+        set(state => ({
+            storedJwt: data
+        }))
+    },
+    isLoggedIn: false,
+    setIsLoggedIn: bool => {
+        set(state => ({
+            isLoggedIn: bool
+        }))
+    },
     mainData: [],
     setMainData: (data) => {
                     set(state => ({
@@ -93,18 +105,3 @@ const store = (set) => ({
 const useStore = create(store)
 
 export default useStore
-
-//       empty: [],
-
-//       addSomething: (somethingToAddToEmpty) => {
-//         set(state => ({
-//             empty: [somethingToAddToEmpty, ...state.empty]
-//         }))
-//       },
-//       removeSomething: (id) => {
-//        set((state) => ({
-//         empty: state.empty.filter((e) => {
-//             e.id !== id
-//         })
-//        }))
-//      }

@@ -21,8 +21,11 @@ export default function LeagueStandings() {
     const setUser = useStore(state => state.setUser)
     const data = useStore(state => state.mainData)
     const teamLogos = useStore(state => state.teamLogos)
-    const isLoggedIn = Object.keys(user).length != 0
-    
+
+
+    const isLoggedIn = useStore(state => state.isLoggedIn)
+    const setIsLoggedIn = useStore(state => state.setIsLoggedIn)
+
     const addFav = async(e) => {
         const id = e.target.closest('button').id
         

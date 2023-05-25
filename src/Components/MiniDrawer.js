@@ -13,7 +13,7 @@ import MuiAppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import List from "@mui/material/List";
 import Typography from "@mui/material/Typography";
-
+import Button from '@mui/material/Button'
 import IconButton from "@mui/material/IconButton";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
@@ -23,9 +23,9 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 
 import Tooltip from '@mui/material/Tooltip';
 import Grid from '@mui/material/Grid'
-import Button from '@mui/material/Button'
 
-import jwtDecode from "jwt-decode"
+
+
 
 import useStore from '../store'
 
@@ -109,87 +109,30 @@ const Drawer = styled(MuiDrawer, {
 }));
 
 export default function MiniDrawer(props) {
+  console.log(props)
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
   //Object.keys(user).length != 0
   const user = useStore(state => state.user)
   const setUser = useStore(state => state.setUser)
-  
-  const isLoggedIn = Object.keys(user).length != 0
-  React.useEffect(() => {
-    /* global google */
-    google.accounts.id.initialize({
-      client_id: "543204222025-vu2ci05c2kei4pcspud0pi81peddd2tf.apps.googleusercontent.com",
-      callback: handleCallbackResponse
-    });
 
-    google.accounts.id.renderButton(
-      document.getElementById('signIn'),
-      { theme: "", size: "large", shape: 'pill', type: "icon", display: 'none' }
-    )
-    
-    
-    if (isLoggedIn) {
-      document.querySelector('#signIn').hidden = true
-      document.querySelector('[aria-label="Favorites"]').closest('li').style.display = ''
-      document.querySelector('[aria-label="Fantasy"]').closest('li').style.display = ''
-    } else {
-      document.querySelector('#signIn').hidden = false
-      document.querySelector('[aria-label="Favorites"]').closest('li').style.display = 'none'
-      document.querySelector('[aria-label="Fantasy"]').closest('li').style.display = 'none'
-    }
-    const storedJwt = localStorage.getItem('jwt');
-  
-    if (storedJwt) {
-      // If a JWT is stored, attempt to log in with it
-      login(storedJwt).then((data) => {
-        document.querySelector('#signIn').hidden = true
-        setUser(data);
-        document.querySelector('[aria-label="Favorites"]').closest('li').style.display = ''
-        document.querySelector('[aria-label="Fantasy"]').closest('li').style.display = ''
-      });
-    }
+  const isLoggedIn = useStore(state => state.isLoggedIn)
+  const setIsLoggedIn = useStore(state => state.setIsLoggedIn)
+
+  const handleSignOut = (e) => {
+    localStorage.removeItem('jwt')
+    setUser({})
+    setIsLoggedIn(false)
+  }
+
+  React.useEffect(() => {
+
   }, [])
-  console.log(isLoggedIn)
+
   const handleToggle = (e) => {
     e.target.checked ? props.setter(darkTheme) : props.setter(lightTheme)
   }
-  async function login(jwt) {
-    // main_home needs: teams, standings, news
-    const response = await fetch('http://127.0.0.1:4444/token', {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ token: jwt }),
-    });
-
-    localStorage.setItem('jwt', jwt);
-
-    return response.json()
-  }
-  const handleCallbackResponse = (res) => {
-    console.log(res)
-    const user_ = jwtDecode(res.credential)
-    
-    // console.log(user)
-    document.querySelector('#signIn').hidden = true
-    document.querySelector('[aria-label="Favorites"]').closest('li').style.display = ''
-    document.querySelector('[aria-label="Fantasy"]').closest('li').style.display = ''
-
-    login(res.credential).then((data) => {
-      setUser(data)
-    })
-
-  }
   
-  const handleSignOut = (e) => {
-    setUser({})
-    localStorage.removeItem('jwt');
-    document.querySelector('#signIn').hidden = false
-    document.querySelector('[aria-label="Favorites"]').closest('li').style.display = 'none'
-    document.querySelector('[aria-label="Fantasy"]').closest('li').style.display = 'none'
-  }
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -201,7 +144,7 @@ export default function MiniDrawer(props) {
   const handleSignInClick = (e) => {
     console.log(e)
   }
-
+  
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
@@ -222,19 +165,9 @@ export default function MiniDrawer(props) {
           <Grid container justifyContent="space-between" alignItems="center">
             <Typography variant="h6" noWrap component="div">
               Full Count Fantasy
-
             </Typography>
-
-            <div id="signIn" onClick={handleSignInClick}></div>
-
-            {
-              Object.keys(user).length != 0 &&
-              <Button variant="" id="signOut" onClick={handleSignOut}>SignOut</Button>
-            }
-
-
-
-
+            {!isLoggedIn && props.Login}
+            {isLoggedIn && <Button variant="" id="signOut" onClick={handleSignOut}>SignOut</Button>}
           </Grid>
         </Toolbar>
       </AppBar>
@@ -251,38 +184,45 @@ export default function MiniDrawer(props) {
         <Grid container flexDirection="column" height="100%" justifyContent="space-between">
           <List>
             {props.pages.map((page) => {
-              return (
-                <ListItem
-                  key={page.name}
-                  disablePadding
-                  sx={{ display: "block" }}
-                >
-                  <Link to={page.path} style={{ textDecoration: 'none', color: 'grey' }}>
-                    <Tooltip title={page.name} placement="right">
-                      <ListItemButton
-                        key={page.name}
-                        sx={{
-                          minHeight: 48,
-                          justifyContent: open ? "initial" : "center",
-                          px: 2.5
-                        }}
-                      >
-                        <ListItemIcon
+              if (!isLoggedIn && (page.name == 'Favorites' || page.name == 'Fantasy')) {
+                return (
+                  ''
+                );
+              } else {
+                return (
+                  <ListItem
+                    key={page.name}
+                    disablePadding
+                    sx={{ display: "block" }}
+                  >
+                    <Link to={page.path} style={{ textDecoration: 'none', color: 'grey' }}>
+                      <Tooltip title={page.name} placement="right">
+                        <ListItemButton
                           key={page.name}
                           sx={{
-                            minWidth: 0,
-                            mr: open ? 3 : 'auto',
-                            justifyContent: 'center',
+                            minHeight: 48,
+                            justifyContent: open ? "initial" : "center",
+                            px: 2.5
                           }}
                         >
-                          {page.icon}
-                        </ListItemIcon>
-
-                      </ListItemButton>
-                    </Tooltip>
-                  </Link>
-                </ListItem>
-              );
+                          <ListItemIcon
+                            key={page.name}
+                            sx={{
+                              minWidth: 0,
+                              mr: open ? 3 : 'auto',
+                              justifyContent: 'center',
+                            }}
+                          >
+                            {page.icon}
+                          </ListItemIcon>
+  
+                        </ListItemButton>
+                      </Tooltip>
+                    </Link>
+                  </ListItem>
+                );
+              }
+              
             })}
           </List>
           <Switch onClick={handleToggle} {...label} />

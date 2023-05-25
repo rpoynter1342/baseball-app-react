@@ -143,7 +143,7 @@ function GameStepper() {
                 <Grid container justifyContent='space-around' height='100%' alignContent='center' flexDirection='column'>
                   <Grid item>
                     <Card sx={{width: "300px", height: '50px', display: 'flex', alignItems: 'center'}}>
-                      <div class='imgHolder'><img height='40px' width='40px' src={logos.teams[data[0].teams.teams.find(team => team.id == idAway).abbreviation]} /></div>
+                      <div className='imgHolder'><img height='40px' width='40px' src={logos.teams[data[0].teams.teams.find(team => team.id == idAway).abbreviation]} /></div>
                       <Divider orientation="vertical" flexItem />
                       {
                         filterForId(data[0].schedule.dates.slice(0, -1), idAway).map(game => {
@@ -180,7 +180,7 @@ function GameStepper() {
                   </Grid>
                   <Grid item>
                   <Card sx={{width: "300px", height: '50px', display: 'flex', alignItems: 'center'}}>
-                  <div class='imgHolder'><img height='40px' width='40px' src={logos.teams[data[0].teams.teams.find(team => team.id == idHome).abbreviation]} /></div>
+                  <div className='imgHolder'><img height='40px' width='40px' src={logos.teams[data[0].teams.teams.find(team => team.id == idHome).abbreviation]} /></div>
                       <Divider orientation="vertical" flexItem />
                       {
                         filterForId(data[0].schedule.dates.slice(0, -1), idHome).map(game => {
