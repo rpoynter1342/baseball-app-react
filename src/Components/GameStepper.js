@@ -46,7 +46,7 @@ function GameStepper() {
     // Fetch game data immediately
     fetchData();
 
-    // Then fetch game data every 15 seconds
+    
     const intervalId = setInterval(fetchData, 60000);
     socket.on('response', data => {
       setMainData(data)
@@ -66,9 +66,6 @@ function GameStepper() {
   // console.log(logos)
   return (
     <Grid container justifyContent='center' alignItems='center' height='34rem'>
-      <Grid item>
-
-      </Grid>
       <Grid item>
         <Carousel>
           {

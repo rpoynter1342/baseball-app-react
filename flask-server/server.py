@@ -50,23 +50,17 @@ def get_public_key(kid):
     return None
 
 
-@app.route('/token', methods=['POST'])
-def token():
-    if not request.is_json:
-        return jsonify({"msg": "Missing JSON in request"}), 400
-
-    token = request.json.get('token', None)
-    if not token:
-        return jsonify({"msg": "Missing token parameter"}), 400
-
+@app.route('/get_user', methods=['POST'])
+def get_user():
+    login = request.get_json()['token']
     # Token validation
     try:
         # This will raise an error if the token is invalid
-        header = jwt.get_unverified_header(token)
+        header = jwt.get_unverified_header(login)
         key_id = header.get('kid')
         key = get_public_key(key_id)
         if key:
-            decoded = jwt.decode(token, key, algorithms='RS256', audience=GOOGLE_CLIENT_ID)
+            decoded = jwt.decode(login, key, algorithms='RS256', audience=GOOGLE_CLIENT_ID)
         else:
             raise JWTError("Invalid key ID")
     except JWTError as e:

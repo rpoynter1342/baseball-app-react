@@ -25,8 +25,8 @@ import Tooltip from '@mui/material/Tooltip';
 import Grid from '@mui/material/Grid'
 
 
-
-
+import { GoogleLogin } from '@react-oauth/google';
+import { googleLogout } from '@react-oauth/google';
 import useStore from '../store'
 
 const darkTheme = createTheme({
@@ -120,11 +120,9 @@ export default function MiniDrawer(props) {
   const setIsLoggedIn = useStore(state => state.setIsLoggedIn)
 
   const handleSignOut = (e) => {
-    localStorage.removeItem('jwt')
-    setUser({})
-    setIsLoggedIn(false)
+    
   }
-
+  
   React.useEffect(() => {
     // console.log(user)
     
@@ -152,6 +150,28 @@ export default function MiniDrawer(props) {
     return response.json()
   }
 
+  const getUser = async (token) => {
+    const response = await fetch('http://127.0.0.1:4444/get_user', {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ token }),
+    });
+    console.log(response)
+    if (response.status == 200) {
+      localStorage.setItem('jwt', token)
+    }
+    return response.json()
+  }
+  
+  const handleGetUser = (cred) => {
+    getUser(cred.credential).then(res => {
+      setUser(res)
+      setIsLoggedIn(true)
+    })
+    console.log(cred.credential)
+  }
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -183,8 +203,13 @@ export default function MiniDrawer(props) {
             <Typography variant="h6" noWrap component="div">
               Full Count Fantasy
             </Typography>
-            {!isLoggedIn && props.Login}
-            {isLoggedIn && <Button variant="" id="signOut" onClick={handleSignOut}>SignOut</Button>}
+            {!isLoggedIn && <GoogleLogin
+              onSuccess={handleGetUser}
+              onError={() => {
+                console.log('Login Failed');
+              }}
+            />}
+            {isLoggedIn && <Button variant="" id="signOut" onClick={googleLogout}>SignOut</Button>}
           </Grid>
         </Toolbar>
       </AppBar>

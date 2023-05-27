@@ -16,6 +16,7 @@ import CssBaseline from "@mui/material/CssBaseline";
 import jwtDecode from "jwt-decode"
 
 import './styles.css';
+import { GoogleOAuthProvider } from "@react-oauth/google";
 const darkTheme = createTheme({
   palette: {
     mode: 'dark',
@@ -44,20 +45,7 @@ function App() {
   const setMainData = useStore(state => state.setMainData)
   const [theme, setTheme] = React.useState(lightTheme)
 
-  async function login(jwt) {
-    // main_home needs: teams, standings, news
-    const response = await fetch('http://127.0.0.1:4444/token', {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ token: jwt }),
-    });
-  
-    // localStorage.setItem('jwt', jwt);
-    if (response.status == 200) localStorage.setItem('jwt', jwt);
-    return response.json()
-  }
+
 
   async function mainFetch() {
     // main_home needs: teams, standings, news
@@ -74,37 +62,22 @@ function App() {
     }
   }
 
-  const handleCallbackResponse = (res) => {
-    login(res.credential).then((data) => {
-      setUser(data)
-      setIsLoggedIn(true)
-      localStorage.setItem('jwt', res.credential)
-    }).catch(e => {
-      console.log(e)
-      localStorage.removeItem('jwt')
-      setIsLoggedIn(false)
-      setUser({})
-    })
+  
+  const getUser = async (token) => {
+    const response = await fetch('http://127.0.0.1:4444/get_user', {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ token }),
+    });
+    console.log(response)
+    if (response.status == 200) {
+      localStorage.setItem('jwt', token)
+    }
+    return response.json()
   }
   
-  function LoginBtn() {
-    React.useEffect(() => {
-      
-        google.accounts.id.initialize({
-          client_id: "543204222025-vu2ci05c2kei4pcspud0pi81peddd2tf.apps.googleusercontent.com",
-          callback: handleCallbackResponse
-        });
-    
-        google.accounts.id.renderButton(
-          document.getElementById('signIn'),
-          { theme: "", size: "large", shape: 'pill', type: "icon", display: 'none' }
-        )
-      
-    },[])
-    return (
-      <div id="signIn"></div>
-    )
-  }
 
   
       
@@ -116,7 +89,7 @@ function App() {
     }
     if (storedJwt) {
       // If a JWT is stored, attempt to log in with it
-      login(storedJwt).then((data) => {
+      getUser(storedJwt).then((data) => {
         console.log(data)
         setUser(data);
         setIsLoggedIn(true)
@@ -147,9 +120,10 @@ function App() {
   //   document.querySelector('#signIn').style.display = 'none'
   // }
   return (
+    <GoogleOAuthProvider clientId="543204222025-vu2ci05c2kei4pcspud0pi81peddd2tf.apps.googleusercontent.com">
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <MiniDrawer pages={pages} setter={setTheme} Login={<LoginBtn />}>
+      <MiniDrawer pages={pages} setter={setTheme}>
         <Routes>
           {
             pages.map((page) => {
@@ -164,6 +138,7 @@ function App() {
         </Routes>
       </MiniDrawer>
     </ThemeProvider>
+    </GoogleOAuthProvider>
   );
 }
 
