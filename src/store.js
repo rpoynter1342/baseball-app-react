@@ -26,6 +26,12 @@ const store = (set) => ({
             user: data
         }))
     },
+    currentGamesData: {},
+    setCurrentGamesData: data => {
+        set(state => ({
+            currentGamesData: data
+        }))
+    },
     storedJwt: {},
     setStoredJwt: data => {
         set(state => ({
@@ -41,7 +47,7 @@ const store = (set) => ({
     mainData: [],
     setMainData: (data) => {
                     set(state => ({
-                        mainData: [data, ...state.mainData]
+                        mainData: [data]
                     }))
                 },
     curTeamRoster: [],

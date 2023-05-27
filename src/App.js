@@ -37,7 +37,7 @@ function App() {
   const data = useStore(state => state.mainData)
   const user = useStore(state => state.user)
   const setUser = useStore(state => state.setUser)
-
+  
   const isLoggedIn = useStore(state => state.isLoggedIn)
   const setIsLoggedIn = useStore(state => state.setIsLoggedIn)
 
@@ -55,7 +55,7 @@ function App() {
     });
   
     // localStorage.setItem('jwt', jwt);
-  
+    if (response.status == 200) localStorage.setItem('jwt', jwt);
     return response.json()
   }
 
@@ -110,20 +110,29 @@ function App() {
       
   React.useEffect(() => {
     const storedJwt = localStorage.getItem('jwt');
+    console.log(storedJwt)
     if (data.length == 0) {
       mainFetch()
     }
     if (storedJwt) {
       // If a JWT is stored, attempt to log in with it
       login(storedJwt).then((data) => {
+        console.log(data)
         setUser(data);
         setIsLoggedIn(true)
       }).catch(e => {
+        console.log(e)
         setUser({})
         setIsLoggedIn(false)
         localStorage.removeItem('jwt')
       })
     }
+    console.log(user)
+    if (Object.keys(user).length == 0) {
+      setIsLoggedIn(false)
+      localStorage.removeItem('jwt')
+    }
+    console.log(isLoggedIn)
   }, []);
 
   

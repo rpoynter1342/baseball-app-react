@@ -126,13 +126,32 @@ export default function MiniDrawer(props) {
   }
 
   React.useEffect(() => {
-
+    // console.log(user)
+    
   }, [])
+
+  
 
   const handleToggle = (e) => {
     e.target.checked ? props.setter(darkTheme) : props.setter(lightTheme)
+    // if (isLoggedIn == true) {
+    //   setDark(e)
+    // }
   }
-  
+
+
+  const setDark = async (e) => {
+    const response = await fetch('http://127.0.0.1:4444/set_darkmode', {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ 'user': user, 'update': e.target.checked }),
+    });
+    console.log(response)
+    return response.json()
+  }
+
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -141,10 +160,8 @@ export default function MiniDrawer(props) {
   const handleDrawerClose = () => {
     setOpen(false);
   };
-  const handleSignInClick = (e) => {
-    console.log(e)
-  }
-  
+
+
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
@@ -215,20 +232,20 @@ export default function MiniDrawer(props) {
                           >
                             {page.icon}
                           </ListItemIcon>
-  
+
                         </ListItemButton>
                       </Tooltip>
                     </Link>
                   </ListItem>
                 );
               }
-              
+
             })}
           </List>
-          <Switch onClick={handleToggle} {...label} />
+          
 
         </Grid>
-
+        <Switch onClick={handleToggle} {...label} />
       </Drawer>
 
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>

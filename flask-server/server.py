@@ -2,6 +2,7 @@ from flask import Flask, session, abort, redirect, request, jsonify
 from jose import jwt
 from jose.exceptions import JWTError
 from flask_cors import CORS
+from flask_socketio import SocketIO, emit
 from unidecode import unidecode
 import requests
 import os
@@ -27,6 +28,7 @@ db = cluster["App"]
 collection = db["users"]
 
 app = Flask(__name__)
+socketio = SocketIO(app, cors_allowed_origins="*")
 CORS(app)
 
 season_data = statsapi.latest_season()
@@ -80,7 +82,8 @@ def token():
         collection.insert_one(new_user)
         return {user_id: 'New user created.'}, 201
 
-    return {'userid': user_id, 'favorites': user['favorites']}, 200
+    print(user)
+    return {'userid': user_id, 'favorites': user['favorites'], 'darkmode': user['darkmode']}, 200
 
 @app.route('/add_fav', methods=['POST'])
 def add_fav():
@@ -94,7 +97,20 @@ def add_fav():
     
     user = collection.find_one({'userid': user_id})
     print(user)
-    return {'userid': user_id, 'favorites': user['favorites']}, 200
+    return {'userid': user_id, 'favorites': user['favorites'], 'darkmode': user['darkmode']}, 200
+
+@app.route('/set_darkmode', methods=['POST'])
+def set_darkmode():
+    data = request.get_json()
+    user_id = data['user']['userid']
+    query = {'userid': user_id}
+    update = { "$set": {"darkmode": data['update']} }
+
+    collection.update_one(query, update)
+    
+    user = collection.find_one({'userid': user_id})
+    print(user)
+    return {'userid': user_id, 'favorites': user['favorites'], 'darkmode': user['darkmode']}, 200
 
 @app.route('/remove_fav', methods=['POST'])
 def remove_fav():
@@ -122,7 +138,41 @@ def main_home():
     data['divisions'] = statsapi.get('divisions', {'sportId': 1})
     return(data)
 
+@app.route('/get_regular_game')
+def get_regular_game():
+    game = request.get_json()
+    data = {}
+    data = statsapi.get('game_playByPlay', {'gamePk': game['gamePk']})
+    return(data)
+
+
+
+
+
+
+# to be moved to a different module at somepoint
+
+@socketio.on('connect')
+def initial_connection():
+    emit('response', {'data': 'Connected'})
+
+@socketio.on('get game data')
+def get_games_data(game):
+    print(game)
+    emit('response', {'data': statsapi.get('game_playByPlay', {'gamePk': game['gamePk']})})
+
+@socketio.on('get main data')
+def get_data():
+    data = {}
+    data['teams'] = teams
+    data['standings'] = statsapi.get('standings', {'leagueId': '103,104'})
+    data['schedule'] = statsapi.get('schedule', {'sportId': 1, 'startDate': past_week,'endDate': today})
+    data['divisions'] = statsapi.get('divisions', {'sportId': 1})
+    emit('response', data)
+
+@socketio.on('disconnect')
+def handle_disconnect():
+    print('Client disconnected')
 
 if __name__ == '__main__':
-    app.run(debug=True, host=os.getenv('IP', '0.0.0.0'), 
-        port=int(os.getenv('PORT', 4444)))
+    socketio.run(app, debug=True, port=4444)
