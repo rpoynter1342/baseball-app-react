@@ -75,3 +75,46 @@ body {
     display: flex !important;
     align-items: center;
   }
+
+  .bases {
+  
+    grid-area: bases;
+    display: grid;
+  
+    grid-template-columns: 1fr 1fr;
+    width: 30px;
+    height: 30px;
+
+    
+    transform: rotate(45deg);
+    
+  }
+  
+  .base {
+    background: grey;
+    border-radius: 3px;
+    width: 12px;
+    height: 12px;
+  }
+  
+  .outs {
+    display: flex;
+    justify-content: space-between;
+    width: 30px;
+    
+  }
+  
+  .out {
+    background: grey;
+    border-radius: 8px;
+    width: 6px;
+    height: 6px;
+  }
+
+  .isOut {
+    background: yellow;
+  }
+  
+  .onbase {
+    background: yellow;
+  }

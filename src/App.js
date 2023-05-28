@@ -38,7 +38,7 @@ function App() {
   const data = useStore(state => state.mainData)
   const user = useStore(state => state.user)
   const setUser = useStore(state => state.setUser)
-  
+
   const isLoggedIn = useStore(state => state.isLoggedIn)
   const setIsLoggedIn = useStore(state => state.setIsLoggedIn)
 
@@ -62,7 +62,7 @@ function App() {
     }
   }
 
-  
+
   const getUser = async (token) => {
     const response = await fetch('http://127.0.0.1:4444/get_user', {
       method: "POST",
@@ -77,10 +77,10 @@ function App() {
     }
     return response.json()
   }
-  
 
-  
-      
+
+
+
   React.useEffect(() => {
     const storedJwt = localStorage.getItem('jwt');
     console.log(storedJwt)
@@ -108,7 +108,7 @@ function App() {
     console.log(isLoggedIn)
   }, []);
 
-  
+
   if (data.length == 0) {
     return (
       <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
@@ -121,23 +121,23 @@ function App() {
   // }
   return (
     <GoogleOAuthProvider clientId="543204222025-vu2ci05c2kei4pcspud0pi81peddd2tf.apps.googleusercontent.com">
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <MiniDrawer pages={pages} setter={setTheme}>
-        <Routes>
-          {
-            pages.map((page) => {
-              return <Route key={page.name} id={page.name} path={page.path} element={page.element} />
-            })
-          }
-          {
-            hiddenPages.map((page) => {
-              return <Route key={page.name} path={page.path} element={page.element} />;
-            })
-          }
-        </Routes>
-      </MiniDrawer>
-    </ThemeProvider>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <MiniDrawer pages={pages} setter={setTheme}>
+          <Routes>
+            {
+              pages.map((page) => {
+                return <Route key={page.name} id={page.name} path={page.path} element={page.element} />
+              })
+            }
+            {
+              hiddenPages.map((page) => {
+                return <Route key={page.name} path={page.path} element={page.element} />;
+              })
+            }
+          </Routes>
+        </MiniDrawer>
+      </ThemeProvider>
     </GoogleOAuthProvider>
   );
 }

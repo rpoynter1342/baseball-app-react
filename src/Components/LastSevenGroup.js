@@ -43,7 +43,7 @@ export default function LastSevenGroup({ game, idHome, idAway }) {
     return (
         <>
             <Grid item width="90%">
-                <Card sx={{  height: '50px', display: 'flex', alignItems: 'center' }}>
+                <Card sx={{ height: '50px', display: 'flex', alignItems: 'center' }}>
                     <div className='imgHolder'><img height='40px' width='40px' src={logos.teams[data[0].teams.teams.find(team => team.id == idAway).abbreviation]} /></div>
                     <Divider orientation="vertical" flexItem />
                     {
@@ -61,11 +61,11 @@ export default function LastSevenGroup({ game, idHome, idAway }) {
 
                                                 game.teams.away.team.id == idAway ?
                                                     game.teams.away.isWinner == true ?
-                                                        <Tooltip title="Win"><CheckCircleIcon sx={{ height: '20px', width: '20px' }} /></Tooltip> :
-                                                        <Tooltip title="Loss"><CancelIcon sx={{ height: '20px', width: '20px' }} /></Tooltip> :
+                                                        <Tooltip title="Win"><CheckCircleIcon sx={{ height: '20px', width: '20px', color: 'green' }} /></Tooltip> :
+                                                        <Tooltip title="Loss"><CancelIcon sx={{ height: '20px', width: '20px', color: 'red' }} /></Tooltip> :
                                                     game.teams.home.isWinner == true ?
-                                                        <Tooltip title="Win"><CheckCircleIcon sx={{ height: '20px', width: '20px' }} /></Tooltip> :
-                                                        <Tooltip title="Loss"><CancelIcon sx={{ height: '20px', width: '20px' }} /></Tooltip>
+                                                        <Tooltip title="Win"><CheckCircleIcon sx={{ height: '20px', width: '20px', color: 'green' }} /></Tooltip> :
+                                                        <Tooltip title="Loss"><CancelIcon sx={{ height: '20px', width: '20px', color: 'red' }} /></Tooltip>
 
                                             }
                                         </Grid>
@@ -90,7 +90,7 @@ export default function LastSevenGroup({ game, idHome, idAway }) {
                 </Card>
             </Grid>
             <Grid item width="90%">
-                <Card sx={{  height: '50px', display: 'flex', alignItems: 'center' }}>
+                <Card sx={{ height: '50px', display: 'flex', alignItems: 'center' }}>
                     <div className='imgHolder'><img height='40px' width='40px' src={logos.teams[data[0].teams.teams.find(team => team.id == idHome).abbreviation]} /></div>
                     <Divider orientation="vertical" flexItem />
                     {
@@ -101,13 +101,13 @@ export default function LastSevenGroup({ game, idHome, idAway }) {
                                         <Grid container flexDirection='column' alignContent='center' justifyContent='center' alignItems='center'>
                                             <Typography variant='caption'>{game.officialDate.split('-')[1]}/{game.officialDate.split('-')[2]}</Typography>
                                             {
-                                                game.teams.away.team.id == idAway ?
-                                                    game.teams.away.isWinner == true ?
-                                                        <Tooltip title="Win"><CheckCircleIcon sx={{ height: '20px', width: '20px' }} /></Tooltip> :
-                                                        <Tooltip title="Loss"><CancelIcon sx={{ height: '20px', width: '20px' }} /></Tooltip> :
-                                                    game.teams.home.isWinner == true ?
-                                                        <Tooltip title="Win"><CheckCircleIcon sx={{ height: '20px', width: '20px' }} /></Tooltip> :
-                                                        <Tooltip title="Loss"><CancelIcon sx={{ height: '20px', width: '20px' }} /></Tooltip>
+                                                game.teams.away.team.id == idHome ?
+                                                game.teams.away.isWinner == true ?
+                                                    <Tooltip title="Win"><CheckCircleIcon sx={{ height: '20px', width: '20px', color: 'green' }} /></Tooltip> :
+                                                    <Tooltip title="Loss"><CancelIcon sx={{ height: '20px', width: '20px', color: 'red' }} /></Tooltip> :
+                                                game.teams.home.isWinner == true ?
+                                                    <Tooltip title="Win"><CheckCircleIcon sx={{ height: '20px', width: '20px', color: 'green' }} /></Tooltip> :
+                                                    <Tooltip title="Loss"><CancelIcon sx={{ height: '20px', width: '20px', color: 'red' }} /></Tooltip>
                                             }
                                         </Grid>
                                         <Divider orientation="vertical" flexItem />

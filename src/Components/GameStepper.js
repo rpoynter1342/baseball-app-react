@@ -11,7 +11,7 @@ import AccessTimeFilledIcon from '@mui/icons-material/AccessTimeFilled';
 import PauseCircleFilledIcon from '@mui/icons-material/PauseCircleFilled';
 import LastSevenGroup from './LastSevenGroup';
 import RealTimeUpdates from './RealTimeUpdates'
-
+import * as _ from 'lodash'
 import io from 'socket.io-client';
 const socket = io.connect("http://localhost:4444/")
 
@@ -124,7 +124,7 @@ function GameStepper() {
                             <Grid container flexDirection='column' alignItems='center' sx={{ width: '30%' }} onClick={handleClickOpen}>
                               <Grid item>{team.abbreviation}</Grid>
                               <Grid item><img height='70px' width='70px' src={logos.teams[team.abbreviation]} /></Grid>
-                              <Grid item><Typography variant="caption" display="block">({game.teams.home.leagueRecord.wins} - {game.teams.away.leagueRecord.losses})</Typography></Grid>
+                              <Grid item><Typography variant="caption" display="block">({game.teams.home.leagueRecord.wins} - {game.teams.home.leagueRecord.losses})</Typography></Grid>
                             </Grid>
                           )
                         }

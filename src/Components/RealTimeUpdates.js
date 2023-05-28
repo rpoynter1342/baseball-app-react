@@ -9,7 +9,7 @@ import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import ListSubheader from '@mui/material/ListSubheader';
 import Chip from '@mui/material/Chip'
-
+import * as _ from 'lodash'
 import io from 'socket.io-client';
 const socket = io.connect("http://localhost:4444/")
 
@@ -20,38 +20,72 @@ export default function RealTimeUpdates({ game, idHome, idAway }) {
     const logos = useStore(state => state.teamLogos)
     const currentGamesData = useStore(state => state.currentGamesData)
     const setCurrentGamesData = useStore(state => state.setCurrentGamesData)
-    const [games, setGamesData] = React.useState({})
-    React.useEffect(() => {
-        const fetchGameData = () => {
-            socket.emit('get game data', { 'gamePk': game.gamePk });
-        };
-        
-        fetchGameData();
-        const intervalId = setInterval(fetchGameData, 15000);
     
-        
 
-        socket.on('response', data => {
-            setGamesData(data)
-        });
-    }, [])
-    if (Object.keys(games).length == 0) {
-        return (
-            <Card sx={{ width: "100%", height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <CircularProgress />
-            </Card>
-        )
-    }
-    //<Chip sx={{height: '19px', fontSize: '10px'}} label={`${pitch.details.description.split(' - ')[1]}`} />
-    // console.log(games)
+    // let liveGame = {}
+    // const fetchGameData = async () => {
+    //     await socket.emit('get game data', { 'gamePk': game.gamePk });
+    // };
+
+    // React.useEffect(() => {
+
+
+    //     if (game.status.abstractGameState == 'Live') {
+    //         const intervalId = setInterval(fetchGameData, 5000);
+    //     }
+
+
+
+    //     socket.on('response', data => {
+    //         setCurrentGamesData(data)
+    //     });
+    // }, [])
+
+    // console.log()
+
+    // if (Object.keys(currentGamesData) == 0) {
+    //     return <CircularProgress />
+    // }
+
+// <Grid item container alignItems='center' justifyContent='space-between'>
+//                 <Grid item>
+//                     H: {
+//                         currentGamesData.data.currentPlay.matchup.batter.fullName
+//                     }
+//                 </Grid>
+//                 <Grid item>
+//                     P: {
+//                         currentGamesData.data.currentPlay.matchup.pitcher.fullName
+//                     }
+//                 </Grid>
+//             </Grid>
+
+    
 
     return (
-        <Grid container flexDirection='column' justifyContent='center'  alignItems='center'>
+        <Grid container flexDirection='column' justifyContent='space-between' alignItems='center' height='100%'>
             <Grid item container flexDirection='column' alignItems='center' justifyContent='center'>
-                <Typography sx={{ height: '19px', fontSize: '10px' }}>Bases</Typography>
-                <Typography sx={{ height: '19px', fontSize: '10px' }}>Count</Typography>
+                <Grid item display="flex" justifyContent='space-around' width="60%">
+                    <Typography variant="h4">{game.teams.away.score}</Typography>
+                    <Grid item container flexDirection='column' alignItems='center' justifyContent='center'>
+
+                        <div class="bases">
+                            <div class="base" id="fb"></div>
+                            <div class="base" id="sb"></div>
+                            <div class="base" id="tb"></div>
+                        </div>
+
+                        <Typography sx={{ height: '19px', fontSize: '12px' }}>0 - 0</Typography>
+                        <div class="outs">
+                            <div class="out" id="oo"></div>
+                            <div class="out" id="to"></div>
+                            <div class="out" id="tho"></div>
+                        </div>
+                    </Grid>
+                    <Typography variant="h4">{game.teams.home.score}</Typography>
+                </Grid>
             </Grid>
-            *NEEDS REWORK*
+            
         </Grid>
     )
 }
