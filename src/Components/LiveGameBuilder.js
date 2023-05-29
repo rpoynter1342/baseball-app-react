@@ -20,30 +20,29 @@ export default function LiveGameBuilder({ game, gamePk, idHome, idAway }) {
 
 
 
-    console.log()
+    console.log(gamePk)
 
 
 
 
-    // React.useEffect(() => {
-    //     const fetchGameData = () => {
-    //         socket.emit('get game data', { 'gamePk': gamePk });
-    //     };
+    React.useEffect(() => {
+        const fetchGameData = () => {
+            console.log(gamePk)
+            socket.emit('get game data', { 'gamePk': gamePk });
+        };
 
-    //     const intervalId = setInterval(fetchGameData, 5000);
+        const intervalId = setInterval(fetchGameData, 5000);
 
-    //     socket.on('response', data => {
-    //         console.log(data)
-    //         setCurrentGamesData(data)
-    //     });
-    // }, [])
+        socket.on('response', data => {
+            console.log(data)
+        });
+    }, [])
 
     // if (Object.keys(currentGamesData) == 0) {
     //     return <CircularProgress />
     // }
 
     return (
-        hi
-
+        
     )
 }

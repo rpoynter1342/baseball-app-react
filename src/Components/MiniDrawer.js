@@ -120,7 +120,9 @@ export default function MiniDrawer(props) {
   const setIsLoggedIn = useStore(state => state.setIsLoggedIn)
 
   const handleSignOut = (e) => {
-    
+    setUser({})
+    setIsLoggedIn(false)
+    localStorage.removeItem('jwt')
   }
   
   React.useEffect(() => {
@@ -209,7 +211,7 @@ export default function MiniDrawer(props) {
                 console.log('Login Failed');
               }}
             />}
-            {isLoggedIn && <Button variant="" id="signOut" onClick={googleLogout}>SignOut</Button>}
+            {isLoggedIn && <Button variant="" id="signOut" onClick={handleSignOut}>SignOut</Button>}
           </Grid>
         </Toolbar>
       </AppBar>

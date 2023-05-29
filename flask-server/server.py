@@ -22,6 +22,7 @@ today = datetime.date.today()
 past_week = today - timedelta(days=7)
 year = today.year
 
+print(today)
 # mongo db init, var link is hidden in a 'private.py' file and not tracked by git because github yealled at me
 cluster = MongoClient(link)
 db = cluster["App"]
@@ -36,6 +37,31 @@ cur_season = season_data['seasonId']
 
 # get list of teamID nums for STATSAPI use
 
+league_leader_stat_cats = [ 
+'battingAverage', 
+'sluggingPercentage',
+'onBasePercentage',
+'onBasePlusSlugging',
+'doubles',
+'triples',
+'homeRuns',
+'runs', 
+'runsBattedIn',
+'hits',
+'strikeouts',
+'stolenBases', 
+'earnedRunAverage',
+'walksAndHitsPerInningPitched',
+'strikeoutsPer9Inn',
+'strikeoutWalkRatio',
+'pitchesPerInning',
+'wins',
+]
+
+
+# 'errors',
+# 'losses',
+# 'walksPer9Inn',
 
 teams = statsapi.get('teams', {'sportId': 1, 'season': year})
 
@@ -139,7 +165,37 @@ def get_regular_game():
     data = statsapi.get('game_playByPlay', {'gamePk': game['gamePk']})
     return(data)
 
+@app.route('/get_top_players')
+def get_top_players():
 
+    data = {
+        
+    }
+
+    player_info = {
+
+    }
+
+    for item in league_leader_stat_cats:
+        try:
+            data[item] = (statsapi.league_leader_data(item, limit=3))
+        except Exception as e:
+            print(f"Error fetching league leader data for {item}: {e}")
+
+    
+
+    for stat in data:
+        for line in data[stat]:
+            p_info = statsapi.lookup_player(line[1])
+            player_info[line[1]] = p_info
+    
+
+    
+    print(player_info)
+
+    
+
+    return({'data': data, 'player_info': player_info})
 
 
 
@@ -151,9 +207,9 @@ def initial_connection():
     emit('response', {'data': 'Connected'})
 
 @socketio.on('get game data')
-def get_games_data(game):
+def get_game_data(game):
     print(game)
-    emit('response', {'data': statsapi.get('game_playByPlay', {'gamePk': game['gamePk']})})
+    emit('game data response', {'data': statsapi.get('game_playByPlay', game)})
 
 @socketio.on('get main data')
 def get_data():

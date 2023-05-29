@@ -1,37 +1,16 @@
-if (isLoggedIn) {
-  document.querySelector('#signIn').hidden = true
-  document.querySelector('[aria-label="Favorites"]').closest('li').style.display = ''
-  document.querySelector('[aria-label="Fantasy"]').closest('li').style.display = ''
-} else {
-  document.querySelector('#signIn').hidden = false
-  document.querySelector('[aria-label="Favorites"]').closest('li').style.display = 'none'
-  document.querySelector('[aria-label="Fantasy"]').closest('li').style.display = 'none'
+{
+  currentGamesData.data.currentPlay.about.halfInning == 'top' ? 
+  <Grid item container>
+      <ArrowDropUpIcon sx={{ height: '14px', width: '14px' }}/>
+      <Typography sx={{ height: '19px', fontSize: '12px' }}>
+          {currentGamesData.data.currentPlay.about.inning}
+      </Typography>
+  </Grid>
+  :
+  <Grid item container>
+      <ArrowDropDownIcon sx={{ height: '14px', width: '14px' }}/>
+      <Typography sx={{ height: '19px', fontSize: '12px' }}>
+          {currentGamesData.data.currentPlay.about.inning}
+      </Typography>
+  </Grid>
 }
-
-const storedJwt = localStorage.getItem('jwt');
-
-if (storedJwt) {
-  // If a JWT is stored, attempt to log in with it
-  login(storedJwt).then((data) => {
-    document.querySelector('#signIn').hidden = true
-    setUser(data);
-    document.querySelector('[aria-label="Favorites"]').closest('li').style.display = ''
-    document.querySelector('[aria-label="Fantasy"]').closest('li').style.display = ''
-  }).catch(e => {
-    setUser({})
-  })
-}
-
-  /* global google */
-  
-  const handleSignOut = (e) => {
-    setUser({})
-    localStorage.removeItem('jwt');
-    document.querySelector('#signIn').hidden = false
-    document.querySelector('[aria-label="Favorites"]').closest('li').style.display = 'none'
-    document.querySelector('[aria-label="Fantasy"]').closest('li').style.display = 'none'
-  }
-{/* <div id="signIn" onClick={handleSignInClick}></div> */}
-
-  
-  

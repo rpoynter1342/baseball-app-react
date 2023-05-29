@@ -126,7 +126,7 @@ export default function LeagueStandings() {
                                             <TableCell >{team.losses}</TableCell>
                                             <TableCell >{team.winningPercentage}</TableCell>
                                             <TableCell >{team.runsScored}</TableCell>
-                                            <TableCell >{(team.runsScored / (team.gamesPlayed)).toFixed(1)}</TableCell>
+                                            <TableCell >{(team.runsScored / (team.gamesPlayed)).toFixed(2)}</TableCell>
                                             <TableCell >{team.runsAllowed}</TableCell>
                                         </TableRow>
                                     )

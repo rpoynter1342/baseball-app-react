@@ -20,7 +20,6 @@ export default function LastSevenGroup({ game, idHome, idAway }) {
     const user = useStore(state => state.user)
     const data = useStore(state => state.mainData)
     const logos = useStore(state => state.teamLogos)
-
     const filterForId = (dateList, id) => {
         let pastSeven = []
         dateList.forEach(date => {

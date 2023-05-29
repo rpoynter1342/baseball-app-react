@@ -61,13 +61,14 @@ const store = (set) => ({
         { name: 'Top Players', path: '/top', element: <TopPlayers />, icon: <WhatshotIcon /> },
         { name: 'All Players', path: '/players', element: <Players />, icon: <SportsBaseballIcon /> },
         { name: 'Teams', path: '/teams', element: <Teams />, icon: <GroupsIcon /> },
-        { name: 'Current Games', path: '/curGames', element: <CurrentGames />, icon: <NotificationsActiveIcon /> },
+        
         { name: 'Favorites', path: '/favorites', element: <Following />, icon: <BookmarkIcon /> },
         { name: 'Fantasy', path: '/fantasy', element: <Fantasy />, icon: <AddIcon /> }
       ],
     
       hiddenPages: [
         { name: 'Team', path: '/team/:key', element: <Team /> },
+        { name: 'Current Games', path: '/curGames', element: <CurrentGames />, icon: <NotificationsActiveIcon /> },
         { name: 'Player', path: '/player/:key', element: <Player /> },
       ],
 

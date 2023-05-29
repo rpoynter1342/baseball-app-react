@@ -12,55 +12,47 @@ import Chip from '@mui/material/Chip'
 import * as _ from 'lodash'
 import io from 'socket.io-client';
 const socket = io.connect("http://localhost:4444/")
-
-export default function RealTimeUpdates({ game, idHome, idAway }) {
+import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import RemoveIcon from '@mui/icons-material/Remove';
+export default function RealTimeUpdates({game, idHome, idAway }) {
 
     const user = useStore(state => state.user)
     const data = useStore(state => state.mainData)
     const logos = useStore(state => state.teamLogos)
     const currentGamesData = useStore(state => state.currentGamesData)
     const setCurrentGamesData = useStore(state => state.setCurrentGamesData)
+
+    // console.log(game)
+
+    React.useEffect(() => {
+        
+    }, [])
+
+
     
-
-    // let liveGame = {}
-    // const fetchGameData = async () => {
-    //     await socket.emit('get game data', { 'gamePk': game.gamePk });
-    // };
-
-    // React.useEffect(() => {
-
-
-    //     if (game.status.abstractGameState == 'Live') {
-    //         const intervalId = setInterval(fetchGameData, 5000);
-    //     }
-
-
-
-    //     socket.on('response', data => {
-    //         setCurrentGamesData(data)
-    //     });
-    // }, [])
-
-    // console.log()
+    // if (game.status.abstractGameState == 'Live') {
+    //     console.log(game.gamePk)
+    // }
 
     // if (Object.keys(currentGamesData) == 0) {
     //     return <CircularProgress />
     // }
 
-// <Grid item container alignItems='center' justifyContent='space-between'>
-//                 <Grid item>
-//                     H: {
-//                         currentGamesData.data.currentPlay.matchup.batter.fullName
-//                     }
-//                 </Grid>
-//                 <Grid item>
-//                     P: {
-//                         currentGamesData.data.currentPlay.matchup.pitcher.fullName
-//                     }
-//                 </Grid>
-//             </Grid>
+    // <Grid item container alignItems='center' justifyContent='space-between'>
+    //                 <Grid item>
+    //                     H: {
+    //                         currentGamesData.data.currentPlay.matchup.batter.fullName
+    //                     }
+    //                 </Grid>
+    //                 <Grid item>
+    //                     P: {
+    //                         currentGamesData.data.currentPlay.matchup.pitcher.fullName
+    //                     }
+    //                 </Grid>
+    //             </Grid>
 
-    
+
 
     return (
         <Grid container flexDirection='column' justifyContent='space-between' alignItems='center' height='100%'>
@@ -81,11 +73,13 @@ export default function RealTimeUpdates({ game, idHome, idAway }) {
                             <div class="out" id="to"></div>
                             <div class="out" id="tho"></div>
                         </div>
+                        <Typography sx={{ height: '19px', fontSize: '12px' }}>
+                            
+                        </Typography>
                     </Grid>
                     <Typography variant="h4">{game.teams.home.score}</Typography>
                 </Grid>
             </Grid>
-            
         </Grid>
     )
 }
