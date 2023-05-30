@@ -84,9 +84,9 @@ function App() {
   React.useEffect(() => {
     const storedJwt = localStorage.getItem('jwt');
     console.log(storedJwt)
-    if (data.length == 0) {
-      mainFetch()
-    }
+
+    mainFetch()
+  
     if (storedJwt) {
       // If a JWT is stored, attempt to log in with it
       getUser(storedJwt).then((data) => {

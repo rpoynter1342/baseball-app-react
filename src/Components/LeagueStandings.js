@@ -18,12 +18,12 @@ import { Link, Routes, Route } from "react-router-dom";
 import useStore from '../store'
 export default function LeagueStandings() {
     const user = useStore(state => state.user)
+    const isLoggedIn = useStore(state => state.isLoggedIn)
     const setUser = useStore(state => state.setUser)
     const data = useStore(state => state.mainData)
     const teamLogos = useStore(state => state.teamLogos)
 
 
-    const isLoggedIn = useStore(state => state.isLoggedIn)
     const setIsLoggedIn = useStore(state => state.setIsLoggedIn)
 
     const addFav = async(e) => {
