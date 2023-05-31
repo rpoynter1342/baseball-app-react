@@ -7,8 +7,8 @@ from unidecode import unidecode
 import requests
 import os
 import datetime
+from datetime import timedelta
 from private import link, GOOGLE_CLIENT_ID, GOOGLE_SECRET
-from datetime import datetime, timedelta
 
 import statsapi
 
@@ -16,13 +16,10 @@ import pymongo
 
 from pymongo import MongoClient
 
-import datetime
 
-today = datetime.date.today()
-past_week = today - timedelta(days=7)
-year = today.year
 
-print(today)
+
+
 # mongo db init, var link is hidden in a 'private.py' file and not tracked by git because github yealled at me
 cluster = MongoClient(link)
 db = cluster["App"]
@@ -50,20 +47,19 @@ league_leader_stat_cats = [
 'hits',
 'strikeouts',
 'stolenBases', 
-'earnedRunAverage',
-'walksAndHitsPerInningPitched',
-'strikeoutsPer9Inn',
-'strikeoutWalkRatio',
-'pitchesPerInning',
-'wins',
+
 ]
 
-
+# 'earnedRunAverage',
+# 'walksAndHitsPerInningPitched',
+# 'strikeoutsPer9Inn',
+# 'strikeoutWalkRatio',
+# 'pitchesPerInning',
+# 'wins',
 # 'errors',
 # 'losses',
 # 'walksPer9Inn',
 
-teams = statsapi.get('teams', {'sportId': 1, 'season': year})
 
 
 def get_public_key(kid):
@@ -148,11 +144,14 @@ def remove_fav():
 
 @app.route('/main_home')
 def main_home():
+    today = datetime.date.today()
+    past_week = today - timedelta(days=7)
+    year = today.year
     # needs teams, standings, scores/upcoming games
     # maybe news
     
     data = {}
-    data['teams'] = teams
+    data['teams'] = statsapi.get('teams', {'sportId': 1, 'season': year})
     data['standings'] = statsapi.get('standings', {'leagueId': '103,104'})
     data['schedule'] = statsapi.get('schedule', {'sportId': 1, 'startDate': past_week,'endDate': today})
     data['divisions'] = statsapi.get('divisions', {'sportId': 1})
@@ -209,16 +208,23 @@ def initial_connection():
 @socketio.on('get game data')
 def get_game_data(game):
     print(game)
-    emit('game data response', {'data': statsapi.get('game_playByPlay', game)})
+    data = statsapi.get('game_playByPlay', {'gamePk': game})
+    emit('game data response', {game: data})
+    print("Emitted 'game data response' event with data:", data)
 
 @socketio.on('get main data')
 def get_data():
+    today = datetime.date.today()
+    past_week = today - timedelta(days=7)
+    year = today.year
     data = {}
-    data['teams'] = teams
+    data['teams'] = statsapi.get('teams', {'sportId': 1, 'season': year})
     data['standings'] = statsapi.get('standings', {'leagueId': '103,104'})
     data['schedule'] = statsapi.get('schedule', {'sportId': 1, 'startDate': past_week,'endDate': today})
     data['divisions'] = statsapi.get('divisions', {'sportId': 1})
-    emit('response', data)
+    print('getting data')
+    emit('main data response', data)
+    print('emitting')
 
 @socketio.on('disconnect')
 def handle_disconnect():

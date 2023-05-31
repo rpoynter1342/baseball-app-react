@@ -109,7 +109,6 @@ const Drawer = styled(MuiDrawer, {
 }));
 
 export default function MiniDrawer(props) {
-  console.log(props)
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
   //Object.keys(user).length != 0

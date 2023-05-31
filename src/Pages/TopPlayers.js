@@ -4,12 +4,9 @@ import Grid from '@mui/material/Grid'; // Grid version 1
 import SkeletonLoad from "../Components/SkeletonLoad";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import IconButton from '@mui/material/IconButton';
-import InfoIcon from '@mui/icons-material/Info';
 import useStore from '../store'
-import PersonIcon from '@mui/icons-material/Person';
-import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
-import BookmarkIcon from '@mui/icons-material/Bookmark';
+import WhatshotIcon from '@mui/icons-material/Whatshot';
+import PlayerCarouselHitters from '../Components/PlayerCarouselHitters';
 export default function TopPlayers() {
   const user = useStore(state => state.user)
   const setUser = useStore(state => state.setUser)
@@ -115,74 +112,30 @@ export default function TopPlayers() {
 
   }
 
-  const getProperBookmarkStatus = (id) => {
-    if (isLoggedIn) {
-      if (user.favorites.find(fav => fav.id == id) == undefined) {
-        return <IconButton id={id} onClick={addFav} sx={{ height: '22px', width: '22px'}}><BookmarkBorderIcon sx={{ height: '15px', width: '15px' }} /></IconButton>
-      } else {
-        return <IconButton id={id} onClick={removeFav} sx={{ height: '22px', width: '22px'}}><BookmarkIcon sx={{ height: '15px', width: '15px' }} /></IconButton>
-      }
-    } else {
-      return ''
-    }
-  }
+  
 
   console.log(topPlayers)
   return (
     <Grid container sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-      {
-        Object.keys(topPlayers.data).map(key => {
-          return (
-            <Grid item container flexDirection='column' justifyContent='center' alignContent='center' alignItems='center'>
-              <Typography variant='h4'>{regularCase(key)}</Typography>
-              <Grid item container justifyContent='center'>
-                {
-                  topPlayers.data[key].map(player => {
-                    return (
-                      <Card sx={{ height: '18rem', width: '12rem', marginRight: '2rem', marginLeft: '2rem', padding: '.5rem' }}>
-                        <Grid container flexDirection='column'>
-                          <Grid item container justifyContent='space-between'>
-                            <Grid item>
-                              <Typography variant='caption'>
-                                {getProperBookmarkStatus(topPlayers.player_info[player[1]][0].id)}
-                                {`#${player[0]} ${player[1]}`}
-                              </Typography>
-                            </Grid>
-                            <Grid item>
-                              <IconButton sx={{ height: '1rem', width: '1rem' }} aria-label="info">
-                                <InfoIcon sx={{ height: '1rem', width: '1rem' }} />
-                              </IconButton>
-                            </Grid>
-                          </Grid>
-                          <Grid item alignSelf='center'>
-                            <PersonIcon sx={{ height: '10rem', width: '3rem' }} />
-                          </Grid>
-                          <Grid item alignSelf='center'>
-                            {
-                              ` ${topPlayers.player_info[player[1]][0].primaryPosition.abbreviation}`
-                            }
-                          </Grid>
-                          <Grid item alignSelf='center'>
-                            {
-                              player[2]
-                            }
-                          </Grid>
-                          <Grid item alignSelf='center'>
-                            {
-                              `${statsMap[key]}: ${player[3]}`
-                            }
-                          </Grid>
 
-                        </Grid>
-                      </Card>
-                    )
-                  })
-                }
-              </Grid>
-            </Grid>
-          )
-        })
-      }
+      <Card sx={{height: '25rem', width: '40rem', padding: '1rem', margin: '1rem'}}>
+        <Grid container item sx={{ display: 'flex', alignItems: 'center', justifyContent:'center', marginBottom: '2rem' }}>
+          <WhatshotIcon sx={{fontSize: '3rem'}}/><Typography variant="h3">Batters</Typography>
+        </Grid>
+        <Grid container item sx={{ display: 'flex', alignItems: 'center', justifyContent:'center'}}>
+            <PlayerCarouselHitters topPlayers={topPlayers}/>
+        </Grid>
+      </Card>
+
+      <Card sx={{height: '25rem', width: '40rem', padding: '1rem', margin: '1rem'}}>
+        <Grid container item sx={{ display: 'flex', alignItems: 'center', justifyContent:'center', marginBottom: '2rem'  }}>
+          <WhatshotIcon sx={{fontSize: '3rem'}}/><Typography variant="h3">Pitchers</Typography>
+        </Grid>
+        <Grid container item>
+          hi
+        </Grid>
+      </Card>
+
     </Grid>
   )
 }

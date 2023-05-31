@@ -1,16 +1,18 @@
 {
-  currentGamesData.data.currentPlay.about.halfInning == 'top' ? 
-  <Grid item container>
-      <ArrowDropUpIcon sx={{ height: '14px', width: '14px' }}/>
+  currentGamesData.data.currentPlay.about.halfInning == 'top' ?
+    <Grid item container>
+      <ArrowDropUpIcon sx={{ height: '14px', width: '14px' }} />
       <Typography sx={{ height: '19px', fontSize: '12px' }}>
-          {currentGamesData.data.currentPlay.about.inning}
+        {currentGamesData.data.currentPlay.about.inning}
       </Typography>
-  </Grid>
-  :
-  <Grid item container>
-      <ArrowDropDownIcon sx={{ height: '14px', width: '14px' }}/>
+    </Grid>
+    :
+    <Grid item container>
+      <ArrowDropDownIcon sx={{ height: '14px', width: '14px' }} />
       <Typography sx={{ height: '19px', fontSize: '12px' }}>
-          {currentGamesData.data.currentPlay.about.inning}
+        {currentGamesData.data.currentPlay.about.inning}
       </Typography>
-  </Grid>
+    </Grid>
 }
+
+
