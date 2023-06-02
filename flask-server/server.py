@@ -7,9 +7,12 @@ from unidecode import unidecode
 import requests
 import os
 import datetime
+import pandas as pd
 from datetime import timedelta
 from private import link, GOOGLE_CLIENT_ID, GOOGLE_SECRET
-
+from tensorflow.keras.models import load_model
+from sklearn.preprocessing import StandardScaler
+import numpy as np
 import statsapi
 
 import pymongo
@@ -50,17 +53,14 @@ league_leader_stat_cats = [
 
 ]
 
-# 'earnedRunAverage',
-# 'walksAndHitsPerInningPitched',
-# 'strikeoutsPer9Inn',
-# 'strikeoutWalkRatio',
-# 'pitchesPerInning',
-# 'wins',
-# 'errors',
-# 'losses',
-# 'walksPer9Inn',
 
-
+# params = {
+#         "statType": "byDateRange",
+#         "startDate": "05/08/2022",
+#         "endDate": "05/22/2022",
+#         "personId": 592450
+#     }
+# print(statsapi.get("meta", {'items': 'stats'}))
 
 def get_public_key(kid):
     url = "https://www.googleapis.com/oauth2/v3/certs"
@@ -114,6 +114,59 @@ def add_fav():
     user = collection.find_one({'userid': user_id})
     print(user)
     return {'userid': user_id, 'favorites': user['favorites'], 'darkmode': user['darkmode']}, 200
+
+@app.route('/pastSevenStats')
+def pastSevenStats():
+    today = datetime.date.today()
+    numDays = 7
+    data = []
+    pid = request.args.get('id')
+    model = load_model('hitter_model_avg.h5')
+    for i in range(0, 7):
+        date_range = today - timedelta(days=i)
+        url = "https://statsapi.mlb.com/api/v1/people/"+pid+"?hydrate=stats(group=[hitting],type=[byDateRange],startDate="+str(date_range)+",endDate="+str(date_range)+",force=True)"
+        response = requests.get(url)
+        data.append({'date': str(date_range), 'data': response.json()})
+
+    processed_data = []
+    for item in data:
+        for key in item['data']:
+            if key == 'people':
+                for s in item['data'][key]:
+                    atBats = 0
+                    try:
+                        atBats = int(s['stats'][0]['splits'][0]['stat']['atBats'])
+                    except Exception as e:
+                        print(e)
+                    obp = 0
+                    try: 
+                        obp = float(s['stats'][0]['splits'][0]['stat']['obp'])
+                    except Exception as e:
+                        print(e)
+                    slg = 0
+                    try:
+                        slg = float(s['stats'][0]['splits'][0]['stat']['slg'])
+                    except Exception as e:
+                        print(e)
+                    ops = 0
+                    try:
+                        ops = float(s['stats'][0]['splits'][0]['stat']['ops'])
+                    except Exception as e:
+                        print(e)
+                    processed_data.append([ atBats, obp, slg, ops])
+
+    # Convert the processed data to a pandas DataFrame
+    df = pd.DataFrame(processed_data, columns=['atBats', 'obp', 'slg', 'ops'])
+    seven_day_avg = df.mean(axis=0)
+    prediction = model.predict(np.array([seven_day_avg]))
+    print(f'Predicted AVG for next day: {prediction[0][0]}')
+    print(type(prediction[0][0]))
+    # data.append({'date': str(today + timedelta(1)), 'avg': float(round(prediction[0][0], 3))})
+
+
+    return(data)
+
+    
 
 @app.route('/set_darkmode', methods=['POST'])
 def set_darkmode():

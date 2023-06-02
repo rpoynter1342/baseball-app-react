@@ -112,7 +112,14 @@ export default function TopPlayers() {
 
   }
 
-  
+  // <Card sx={{height: '25rem', width: '40rem', padding: '1rem', margin: '1rem'}}>
+  //       <Grid container item sx={{ display: 'flex', alignItems: 'center', justifyContent:'center', marginBottom: '2rem'  }}>
+  //         <WhatshotIcon sx={{fontSize: '3rem'}}/><Typography variant="h3">Pitchers</Typography>
+  //       </Grid>
+  //       <Grid container item>
+  //         hi
+  //       </Grid>
+  //     </Card>
 
   console.log(topPlayers)
   return (
@@ -127,14 +134,7 @@ export default function TopPlayers() {
         </Grid>
       </Card>
 
-      <Card sx={{height: '25rem', width: '40rem', padding: '1rem', margin: '1rem'}}>
-        <Grid container item sx={{ display: 'flex', alignItems: 'center', justifyContent:'center', marginBottom: '2rem'  }}>
-          <WhatshotIcon sx={{fontSize: '3rem'}}/><Typography variant="h3">Pitchers</Typography>
-        </Grid>
-        <Grid container item>
-          hi
-        </Grid>
-      </Card>
+      
 
     </Grid>
   )

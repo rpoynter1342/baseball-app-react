@@ -62,7 +62,7 @@ export default function LiveGameCard({game, i, idHome, idAway, active, liveGames
             data[0].teams.teams.map(team => {
               if (team.id == game.teams.away.team.id) {
                 return (
-                  <Grid container flexDirection='column' alignItems='center' sx={{ width: '30%' }}>
+                  <Grid key={team.id} container flexDirection='column' alignItems='center' sx={{ width: '30%' }}>
                     <Grid item>{team.abbreviation}</Grid>
                     <Grid item><img height='70px' width='70px' src={logos.teams[team.abbreviation]} /></Grid>
                     <Grid item><Typography variant="caption" display="block">({game.teams.away.leagueRecord.wins} - {game.teams.away.leagueRecord.losses})</Typography></Grid>
@@ -76,7 +76,7 @@ export default function LiveGameCard({game, i, idHome, idAway, active, liveGames
             data[0].teams.teams.map(team => {
               if (team.id == game.teams.home.team.id) {
                 return (
-                  <Grid container flexDirection='column' alignItems='center' sx={{ width: '30%' }}>
+                  <Grid key={team.id} container flexDirection='column' alignItems='center' sx={{ width: '30%' }}>
                     <Grid item>{team.abbreviation}</Grid>
                     <Grid item><img height='70px' width='70px' src={logos.teams[team.abbreviation]} /></Grid>
                     <Grid item><Typography variant="caption" display="block">({game.teams.home.leagueRecord.wins} - {game.teams.home.leagueRecord.losses})</Typography></Grid>

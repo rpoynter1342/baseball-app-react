@@ -74,7 +74,7 @@ export default function Carousel() {
               const idAway = game.teams.away.team.id
               // console.log(game)
               return (
-                <LiveGameCard game={game} liveGames={liveGames} i={i} idHome={idHome} idAway={idAway} active={active}/>
+                <LiveGameCard key={i} game={game} liveGames={liveGames} i={i} idHome={idHome} idAway={idAway} active={active}/>
               )
             })
           }

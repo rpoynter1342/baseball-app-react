@@ -39,26 +39,29 @@ for player in pitcher_training_data:
 
 # Convert the processed data to a pandas DataFrame
 df = pd.DataFrame(processed_data, columns=['player_id', 'avg', 'atBats', 'obp', 'slg', 'ops'])
-
 player_ids = df['player_id']
-features = df.drop(['ops', 'player_id'], axis=1)
-target = df['ops']
 
-X_train, X_test, y_train, y_test = train_test_split(features, target, test_size=0.2, random_state=42)
+training_columns = ['ops', 'avg', 'atBats', 'obp', 'slg']
+for stat in training_columns:
+    features = df.drop([stat, 'player_id'], axis=1)
+    target = df[stat]
 
-model = keras.Sequential([
-    keras.layers.Dense(32, activation='relu'),
-    keras.layers.Dense(32, activation='relu'),
-    keras.layers.Dense(1)
-])
+    X_train, X_test, y_train, y_test = train_test_split(features, target, test_size=0.2, random_state=42)
 
-model.compile(optimizer='adam',
-              loss='mean_squared_error')
+    model = keras.Sequential([
+        keras.layers.Dense(32, activation='relu'),
+        keras.layers.Dense(32, activation='relu'),
+        keras.layers.Dense(1)
+    ])
 
-model.fit(X_train, y_train, epochs=10)
+    model.compile(optimizer='adam',
+                loss='mean_squared_error')
 
-# Save the entire model to a HDF5 file
-model.save('hitter_model.h5')
+    model.fit(X_train, y_train, epochs=10)
+
+    # Save the entire model to a HDF5 file
+    model.save('hitter_model_'+stat+'.h5')
+
 print(X_test)
 y_pred = model.predict(X_test)
 print(y_pred)

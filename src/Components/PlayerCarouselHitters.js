@@ -36,11 +36,11 @@ export default function PlayerCarouselHitters({topPlayers}) {
                 
                     {Object.keys(topPlayers['player_info']).map((player, i) => {
                         return(
-                            <>
+                            <React.Fragment key={player}>
                                 {active > 0 && <div className='nav left' onClick={() => setActive(i => i - 1)}><IconButton><ArrowBackIosNewIcon/></IconButton></div>}
-                                    <HitterPlayerCards i={i} active={active} topPlayers={topPlayers} player={player}/>
+                                    <HitterPlayerCards  i={i} active={active} topPlayers={topPlayers} player={player}/>
                                 {active < count - 1 && <div className='nav right' onClick={() => setActive(i => i + 1)}><IconButton><ArrowForwardIosIcon/></IconButton></div>}
-                            </>
+                            </React.Fragment>
                             
                         )
                     })}

@@ -46,12 +46,11 @@ export default function LastSevenGroup({ game, idHome, idAway }) {
                     <div className='imgHolder'><img height='40px' width='40px' src={logos.teams[data[0].teams.teams.find(team => team.id == idAway).abbreviation]} /></div>
                     <Divider orientation="vertical" flexItem />
                     {
-                        filterForId(data[0].schedule.dates.slice(0, -1), idAway).map(game => {
+                        filterForId(data[0].schedule.dates.slice(0, -1), idAway).map((game, i) => {
                             if (game.content) {
-
                                 return (
 
-                                    <>
+                                    <React.Fragment key={i+'upper'}>
                                         <Grid container flexDirection='column' alignContent='center' justifyContent='center' alignItems='center'>
                                             <Typography variant='caption'>{game.officialDate.split('-')[1]}/{game.officialDate.split('-')[2]}</Typography>
 
@@ -69,19 +68,19 @@ export default function LastSevenGroup({ game, idHome, idAway }) {
                                             }
                                         </Grid>
                                         <Divider orientation="vertical" flexItem />
-                                    </>
+                                    </React.Fragment>
 
 
                                 )
                             } else {
                                 return (
-                                    <>
+                                    <React.Fragment key={i+'lower'}>
                                         <Grid container flexDirection='column' alignContent='center' justifyContent='center' alignItems='center'>
                                             <Typography variant='caption'>{game.split('-')[1]}/{game.split('-')[2]}</Typography>
                                             <Tooltip title="DNP"><DoNotDisturbOnIcon sx={{ height: '20px', width: '20px' }} /></Tooltip>
                                         </Grid>
                                         <Divider orientation="vertical" flexItem />
-                                    </>
+                                    </React.Fragment>
                                 )
                             }
                         })
@@ -93,10 +92,10 @@ export default function LastSevenGroup({ game, idHome, idAway }) {
                     <div className='imgHolder'><img height='40px' width='40px' src={logos.teams[data[0].teams.teams.find(team => team.id == idHome).abbreviation]} /></div>
                     <Divider orientation="vertical" flexItem />
                     {
-                        filterForId(data[0].schedule.dates.slice(0, -1), idHome).map(game => {
+                        filterForId(data[0].schedule.dates.slice(0, -1), idHome).map((game, i) => {
                             if (game.content) {
                                 return (
-                                    <>
+                                    <React.Fragment key={i}>
                                         <Grid container flexDirection='column' alignContent='center' justifyContent='center' alignItems='center'>
                                             <Typography variant='caption'>{game.officialDate.split('-')[1]}/{game.officialDate.split('-')[2]}</Typography>
                                             {
@@ -110,17 +109,17 @@ export default function LastSevenGroup({ game, idHome, idAway }) {
                                             }
                                         </Grid>
                                         <Divider orientation="vertical" flexItem />
-                                    </>
+                                    </React.Fragment>
                                 )
                             } else {
                                 return (
-                                    <>
+                                    <React.Fragment key={i}>
                                         <Grid container flexDirection='column' alignContent='center' justifyContent='center' alignItems='center'>
                                             <Typography variant='caption'>{game.split('-')[1]}/{game.split('-')[2]}</Typography>
                                             <Tooltip title="DNP"><DoNotDisturbOnIcon sx={{ height: '20px', width: '20px' }} /></Tooltip>
                                         </Grid>
                                         <Divider orientation="vertical" flexItem />
-                                    </>
+                                    </React.Fragment>
                                 )
                             }
                         })

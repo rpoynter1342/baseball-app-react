@@ -84,7 +84,7 @@ export default function LeagueStandings() {
     return (
         data[0].standings.records.map(division => {
             return (
-                <TableContainer sx={{marginTop: '1.5rem'}} component={Paper}>
+                <TableContainer key={division.division.id} sx={{marginTop: '1.5rem'}} component={Paper}>
                     <Table size="small">
                         <TableHead>
                             <TableRow>

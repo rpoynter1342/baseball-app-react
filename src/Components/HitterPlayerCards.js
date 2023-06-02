@@ -9,26 +9,52 @@ import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 import InfoIcon from '@mui/icons-material/Info';
 import PersonIcon from '@mui/icons-material/Person';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import PlayerStatTabs from './PlayerStatTabs'
+
 export default function HitterPlayerCards({ i, active, topPlayers, player }) {
   const data = useStore(state => state.mainData)
   const user = useStore(state => state.user)
   const setUser = useStore(state => state.setUser)
   const isLoggedIn = useStore(state => state.isLoggedIn)
-  console.log(data)
+
+  const [open, setOpen] = React.useState(false);
+  const [value, setValue] = React.useState('0');
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
+
+  const handleClickOpen = (e) => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+
   const getProperBookmarkStatus = (id) => {
     if (isLoggedIn) {
       if (user.favorites.find(fav => fav.id == id) == undefined) {
-        return <IconButton id={id} onClick={addFav} sx={{ height: '22px', width: '22px'}}><BookmarkBorderIcon sx={{ height: '15px', width: '15px' }} /></IconButton>
+        return <IconButton id={id} onClick={addFav} sx={{ height: '22px', width: '22px' }}><BookmarkBorderIcon sx={{ height: '15px', width: '15px' }} /></IconButton>
       } else {
-        return <IconButton id={id} onClick={removeFav} sx={{ height: '22px', width: '22px'}}><BookmarkIcon sx={{ height: '15px', width: '15px' }} /></IconButton>
+        return <IconButton id={id} onClick={removeFav} sx={{ height: '22px', width: '22px' }}><BookmarkIcon sx={{ height: '15px', width: '15px' }} /></IconButton>
       }
     } else {
       return ''
     }
   }
 
+
+
   const MAX_VISIBILITY = 3
-  console.log(player)
+
+
   return (
     <div className='card-container' style={{
       '--active': i === active ? 1 : 0,
@@ -37,7 +63,7 @@ export default function HitterPlayerCards({ i, active, topPlayers, player }) {
       '--abs-offset': Math.abs(active - i) / 3,
       'opacity': Math.abs(active - i) >= MAX_VISIBILITY ? '0' : '1',
       'display': 'flex',
-      'justify-content': 'center'
+      'justifyContent': 'center'
     }}>
       <Card key={i} sx={{
         'width': '12rem',
@@ -58,9 +84,33 @@ export default function HitterPlayerCards({ i, active, topPlayers, player }) {
               </Typography>
             </Grid>
             <Grid item>
-              <IconButton sx={{ height: '1rem', width: '1rem' }} aria-label="info">
+              <IconButton sx={{ height: '1rem', width: '1rem' }} id={topPlayers.player_info[player][0].id} onClick={handleClickOpen} aria-label="info">
                 <InfoIcon sx={{ height: '1rem', width: '1rem' }} />
               </IconButton>
+              <Dialog
+                open={open}
+                onClose={handleClose}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+                sx={{marginLeft: '64px' }}
+
+              >
+                <Grid container sx={{ height: '30rem', width: '37rem'}} justifyContent='center' flexDirection='column' alignContent='center'>
+                  <DialogTitle id="alert-dialog-title">
+                    {getProperBookmarkStatus(topPlayers.player_info[player][0].id)}{player}
+                  </DialogTitle>
+                  <DialogContent>
+                    playerstuff
+                  </DialogContent>
+                  <DialogContent>
+                    
+                      
+                        <PlayerStatTabs id={topPlayers.player_info[player][0].id} p={player} />
+
+                  
+                  </DialogContent>
+                </Grid>
+              </Dialog>
             </Grid>
           </Grid>
           <Grid item alignSelf='center'>
@@ -77,7 +127,6 @@ export default function HitterPlayerCards({ i, active, topPlayers, player }) {
             }
           </Grid>
           <Grid item alignSelf='center'>
-
           </Grid>
         </Grid>
       </Card>
